@@ -65,5 +65,7 @@ jobs:
       - attach_workspace:
           at: ~/commentcomparebot/test-results
       - run:
-          pip install codacy-coverage
-          python-codacy-coverage -r coverage.xml
+          name: upload coverage
+          command: |
+            pip install codacy-coverage
+            python-codacy-coverage -r coverage.xml
