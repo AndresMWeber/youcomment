@@ -2,19 +2,19 @@ from difflib import SequenceMatcher
 
 import time
 import praw
-from youcomment.config import SIMILARITY_LIMIT, POST_TEMPLATE
-from youcomment.reddit import RedditYoutubeBot
-from youcomment.youtube import YoutubeVideoBot
+import youcomment.conf as conf
+import youcomment.reddit as rd
+import youcomment.youtube as yt
 
 
 class YouCompareBot(object):
-    reddit_bot = RedditYoutubeBot()
-    youtube_bot = YoutubeVideoBot()
+    reddit_bot = rd.RedditYoutubeBot()
+    youtube_bot = yt.YoutubeVideoBot()
     reply_template = ''
 
     def __init__(self, subreddit=None):
         self.reddit_bot.subreddit_list = subreddit or self.reddit_bot.subreddit_list
-        with open(POST_TEMPLATE, 'r') as f:
+        with open(conf.POST_TEMPLATE, 'r') as f:
             self.reply_template = f.read()
 
     def run(self, subreddit=None, reply=False):
@@ -28,7 +28,7 @@ class YouCompareBot(object):
             for youtube_comment in youtube_comments:
                 for reddit_comment in reddit_comments:
                     similarity = self.similarity(youtube_comment['textDisplay'], reddit_comment.body)
-                    if similarity > SIMILARITY_LIMIT:
+                    if similarity > conf.SIMILARITY_LIMIT:
                         similar_posts.append((similarity, reddit_comment, youtube_comment))
     
         if reply:

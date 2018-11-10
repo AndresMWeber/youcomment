@@ -1,6 +1,6 @@
-from .basetest import BaseTest
-from youcomment.config import CHECKED_FILE
-from youcomment.youcomment import YouCompareBot
+from tests.basetest import BaseTest
+from youcomment.conf import CHECKED_FILE
+from youcomment.bot import YouCompareBot
 
 
 class TestBot(BaseTest):

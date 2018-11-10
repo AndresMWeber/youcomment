@@ -1,6 +1,8 @@
 from unittest import TestCase
-from youcomment.config import CHECKED_FILE
+import youcomment.conf as conf
 import os
+
+CHECKED_FILE = conf.CHECKED_FILE
 
 class BaseTest(TestCase):
     original_data = ''

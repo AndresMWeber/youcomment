@@ -1,14 +1,14 @@
 from unittest import TestCase
 import warnings
-from youcomment.youtube import YoutubeVideoBot
+import youcomment.youtube as yt
 
-parse = YoutubeVideoBot.parse_url
+parse = yt.YoutubeVideoBot.parse_url
 
 
 class TestRun(TestCase):
     def test_default_run_valid(self):
         with warnings.catch_warnings():
-            YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run()
+            yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run()
 
 
 class TestYoutubeURLParse(TestCase):

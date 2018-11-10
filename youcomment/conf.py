@@ -1,7 +1,7 @@
 from os import getenv, environ, path
 from six import iteritems
 
-from youcomment.version import __version__
+import youcomment.version as version
 
 
 __here__ = path.abspath(path.dirname(__file__))
@@ -10,7 +10,7 @@ CHECKED_FILE = path.join(__here__, 'checked.txt')
 POST_TEMPLATE = path.join(__here__, 'post_template.txt')
 SIMILARITY_LIMIT = 0.85
 
-REDDIT_AGENT = 'windows:youtube_compare_bot:v%s by /u/daemonecles' % __version__
+REDDIT_AGENT = 'windows:youtube_compare_bot:v%s by /u/daemonecles' % version.__version__
 REDDIT_USER = getenv('YC_REDDIT_USER', 'youtube_compare_bot')
 REDDIT_PASS = getenv('YC_REDDIT_PASS')
 REDDIT_CLIENT_ID = getenv('YC_REDDIT_CLIENT_ID')
