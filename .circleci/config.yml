@@ -6,6 +6,20 @@ workflows:
       - test-3.6
       - test-3.5
       - test-2.7
+      - upload-coverage:
+          requires:
+              - test-3.5
+              - test-3.6
+              - test-2.7
+
+upload-coverage:
+    steps:
+      - attach_workspace:
+          at: ~/commentcomparebot/test-results
+      - run:
+          pip install codacy-coverage
+          python-codacy-coverage -r coverage.xml
+    
 
 default-run: &test-template
     working_directory: ~/commentcomparebot
@@ -21,6 +35,8 @@ default-run: &test-template
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install -e .[dev]
+            pip install nose coverage
+            mkdir ~/test-results
       - save_cache:
           paths:
             - ./venv
@@ -29,13 +45,12 @@ default-run: &test-template
           name: Run tests
           command: |
             . venv/bin/activate
-            python setup.py test
+            nosetests --with-coverage --cover-package=youcomment --cover-xml-file=~test-results/coverage.xml
       - store_test_results: &store-results
           path: ~/test-results
       - store_artifacts: &store-artifacts
-          path: ~/commentcomparebot
           destination: ~/test-results
-
+        
 jobs:
   test-3.6:
     <<: *test-template
