@@ -67,5 +67,7 @@ jobs:
       - run:
           name: upload coverage
           command: |
+            python -m venv venv || virtualenv venv
+            . venv/bin/activate
             pip install codacy-coverage
             python-codacy-coverage -r coverage.xml
