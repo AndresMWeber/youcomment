@@ -49,7 +49,7 @@ default-run: &test-template
       - store_test_results: &store-results
           path: ~/test-results
       - store_artifacts: &store-artifacts
-          destination: ~/test-results
+          path: ~/test-results
         
 jobs:
   test-3.6:
