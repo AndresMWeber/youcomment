@@ -39,7 +39,8 @@ default-run: &test-template
           name: Run tests
           command: |
             . venv/bin/activate
-            nosetests --with-coverage --cover-package=youcomment --cover-xml-file=~/test-results/coverage.xml
+            nosetests --with-coverage --cover-package=youcomment
+            coverage xml -o ~/test-results/coverage.xml
       - store_test_results: &store-results
           path: ~/test-results
       - store_artifacts: &store-artifacts
