@@ -36,8 +36,10 @@ default-run: &test-template
             coverage xml -o test-results/$PYTHON_VERSION/coverage.xml
             mv .coverage test-results/.coverage.$PYTHON_VERSION
             echo $PYTHON_VERSION
+            ls -all test-results
+            ls -all .covera*
       - persist_to_workspace: &persist-tests
-          root: .
+          root: test-results
           paths:
             - .coverage.${PYTHON_VERSION}
       - store_test_results: &store-results
