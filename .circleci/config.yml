@@ -38,9 +38,9 @@ default-run: &test-template
             echo $PYTHON_VERSION
             ls -all test-results
       - persist_to_workspace: &persist-tests
-          root: test-results
+          root: .
           paths:
-            - .coverage.$PYTHON_VERSION
+            - test-results
       - store_test_results: &store-results
           path: test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
