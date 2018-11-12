@@ -39,7 +39,7 @@ default-run: &test-template
       - persist_to_workspace: &persist-tests
           root: test-results
           paths:
-            - $PYTHON_VERSION
+            - $PYTHON_VERSION/coverage.xml
       - store_test_results: &store-results
           path: test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
