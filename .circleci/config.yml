@@ -6,6 +6,7 @@ workflows:
       - test-3.6
       - test-3.5
       - test-2.7
+      - upload-coverage
 
 default-run: &test-template
     working_directory: ~/commentcomparebot
@@ -35,7 +36,6 @@ default-run: &test-template
             mkdir test-results/$PYTHON_VERSION
             coverage xml -o test-results/$PYTHON_VERSION/coverage.xml
             mv .coverage test-results/.coverage.$PYTHON_VERSION
-            echo $PYTHON_VERSION
             ls -all test-results
       - persist_to_workspace: &persist-tests
           root: .
@@ -82,6 +82,7 @@ jobs:
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install codacy-coverage
+            cd test-results
             coverage combine
             coverage xml
             python-codacy-coverage -r coverage.xml
