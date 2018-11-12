@@ -32,7 +32,13 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            coverage xml -o ~/test-results/coverage.xml
+            mkdir -p ~/test-results/{PYTHON_VERSION}
+            coverage xml -o ~/test-results/coverage{PYTHON_VERSION}.xml
+            rename .coverage .coverage.{PYTHON_VERSION}
+      - persist_to_workspace: &persist-tests
+          root: ~/test-results
+          paths:
+            - {PYTHON_VERSION}
       - store_test_results: &store-results
           path: ~/test-results
       - store_artifacts: &store-artifacts
@@ -41,26 +47,39 @@ default-run: &test-template
 jobs:
   test-3.6:
     <<: *test-template
+    environment:
+      PYTHON_VERSION: python36
     docker:
       - image: circleci/python:3.6
+
   test-3.5:
     <<: *test-template
+    environment:
+      PYTHON_VERSION: python35
     docker:
       - image: circleci/python:3.5
+
   test-2.7:
     <<: *test-template
+    environment:
+      PYTHON_VERSION: python27
     docker:
       - image: circleci/python:2.7
+
   upload-coverage: 
     docker:
       - image: circleci/python:3.6
+    working_directory: ~/commentcomparebot
     steps:
+      - checkout
       - attach_workspace:
-          at: ~/commentcomparebot/test-results
+          at: ~/commentcomparebot/
       - run:
           name: upload coverage
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install codacy-coverage
+            coverage combine
+            coverage xml
             python-codacy-coverage -r coverage.xml
