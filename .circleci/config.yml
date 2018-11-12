@@ -22,7 +22,7 @@ default-run: &test-template
             . venv/bin/activate
             pip install -e .[dev]
             pip install nose coverage
-            mkdir ~/test-results
+            mkdir test-results
       - save_cache:
           paths:
             - ./venv
@@ -32,17 +32,17 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            mkdir -p ~/test-results/$PYTHON_VERSION
-            coverage xml -o ~/test-results/coverage.$PYTHON_VERSION.xml
-            mv ~/.coverage ~/.coverage.$PYTHON_VERSION
+            mkdir test-results/$PYTHON_VERSION
+            coverage xml -o test-results/$PYTHON_VERSION/coverage.xml
+            mv .coverage test-results/.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
-          root: ~/test-results
+          root: test-results
           paths:
             - $PYTHON_VERSION
       - store_test_results: &store-results
-          path: ~/test-results/$PYTHON_VERSION
+          path: test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
-          path: ~/test-results/$PYTHON_VERSION
+          path: test-results/$PYTHON_VERSION
         
 jobs:
   test-3.6:
