@@ -1,8 +1,7 @@
-from os import getenv, environ, path
+from os import getenv, path
 from six import iteritems
 
 import youcomment.version as version
-
 
 __here__ = path.abspath(path.dirname(__file__))
 DEFAULT_SUBREDDITS = ["test123456123456"]
@@ -27,7 +26,6 @@ YOUTUBE_COMMENT_URL_TEMPLATE = 'https://www.youtube.com/watch?v={URL}&lc={COMMEN
 YOUTUBE_COMMENTS_PER_PAGE = 100
 YOUTUBE_COMMENTS_MAX_NUM = 1000
 YOUTUBE_LIKE_THRESHOLD = 3
-
 
 ENV = {'YC_REDDIT_USER': REDDIT_USER,
        'YC_REDDIT_PASS': REDDIT_PASS,

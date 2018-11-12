@@ -1,20 +1,16 @@
-#!/usr/bin/python
 from collections import Counter
-import re
-import random
-from os import getenv, path
+from os import path
+from praw import Reddit
+from praw.models import Comment
 
 import youcomment.youtube as yt
-import youcomment.version as version
 import youcomment.conf as conf
-
-import praw
-from praw import Reddit
 
 
 class RedditYoutubeBot(Reddit):
     SUBMISSION_TRACKER = Counter()
     CHECKED_POSTS = []
+    CHECKED_POST_FILE_PATH = conf.CHECKED_FILE
 
     def __init__(self, subreddits=None):
         super(RedditYoutubeBot, self).__init__(client_id=conf.REDDIT_CLIENT_ID,
@@ -24,7 +20,7 @@ class RedditYoutubeBot(Reddit):
                                                user_agent=conf.REDDIT_AGENT)
         subreddits = subreddits or []
         self.subreddit_list = subreddits or conf.DEFAULT_SUBREDDITS
-        self.CHECKED_POSTS.extend(self._get_checked_posts())
+        self.CHECKED_POSTS.extend(self._get_checked_posts(self.CHECKED_POST_FILE_PATH))
 
     def run(self, subreddit_list=None):
         submissions = 0
@@ -38,13 +34,14 @@ class RedditYoutubeBot(Reddit):
                 if submissions >= conf.REDDIT_MAXPOSTS:
                     break
                 submissions += 1
-        except AttributeError as e:
+        except AttributeError:
             pass
 
-        self._write_checked_posts()
+        self._write_checked_posts(self.CHECKED_POSTS)
         return posts
 
-    def process_post(self, post):
+    @staticmethod
+    def process_post(post):
         try:
             yt.YoutubeVideoBot.parse_url(post.url)
             return [post]
@@ -52,20 +49,24 @@ class RedditYoutubeBot(Reddit):
             pass
         return []
 
-    def _get_checked_posts(self):
-        if path.exists(conf.CHECKED_FILE):
-            with open(conf.CHECKED_FILE, 'r') as checked_posts_file:
+    @staticmethod
+    def _get_checked_posts(checked_posts_file_path):
+        if path.exists(checked_posts_file_path):
+            with open(checked_posts_file_path, 'r') as checked_posts_file:
                 return [line for line in checked_posts_file.read().split() if line]
         else:
             return []
 
-    def _write_checked_posts(self):
-        with open(conf.CHECKED_FILE, 'w') as checked_posts_file:
-            checked_posts_file.write('\n'.join(self.CHECKED_POSTS))
-
-
     @staticmethod
-    def get_top_25_comments(post):
-        comments = [comment for comment in post.comments if isinstance(comment, praw.models.Comment)]
+    def get_top_n_comments(post, num_comments=25):
+        comments = [comment for comment in post.comments if isinstance(comment, Comment)]
         comments.sort(key=lambda comment: comment.score, reverse=True)
-        return comments[:25] #top 25 comments
+        return comments[:num_comments]
+
+    def _write_checked_posts(self, posts):
+        """ Internal function to write the checked posts to file
+
+        :param posts: list, list of post ids that have been checked
+        """
+        with open(self.CHECKED_POST_FILE_PATH, 'w') as checked_posts_file:
+            checked_posts_file.write('\n'.join(posts))

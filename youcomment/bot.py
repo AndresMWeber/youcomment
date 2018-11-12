@@ -23,19 +23,19 @@ class YouCompareBot(object):
         similar_posts = []
         for post in posts:
             youtube_comments = self.youtube_bot.run(post.url)
-            reddit_comments = self.reddit_bot.get_top_25_comments(post)
-            
+            reddit_comments = self.reddit_bot.get_top_n_comments(post)
+
             for youtube_comment in youtube_comments:
                 for reddit_comment in reddit_comments:
                     similarity = self.similarity(youtube_comment['textDisplay'], reddit_comment.body)
                     if similarity > conf.SIMILARITY_LIMIT:
                         similar_posts.append((similarity, reddit_comment, youtube_comment))
-    
+
         if reply:
             self.make_replies(similar_posts)
-    
+
         return similar_posts
-        
+
     def make_replies(self, similar_posts):
         try_again = True
         for similar_post in similar_posts:
@@ -48,8 +48,6 @@ class YouCompareBot(object):
                 except praw.exceptions.APIException:
                     time.sleep(600)
                     try_again = True
-                
-
 
     @staticmethod
     def similarity(str1, str2):
