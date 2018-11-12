@@ -37,11 +37,10 @@ default-run: &test-template
             mv .coverage test-results/.coverage.$PYTHON_VERSION
             echo $PYTHON_VERSION
             ls -all test-results
-            ls -all .covera*
       - persist_to_workspace: &persist-tests
           root: test-results
           paths:
-            - .coverage.${PYTHON_VERSION}
+            - .coverage.$PYTHON_VERSION
       - store_test_results: &store-results
           path: test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
