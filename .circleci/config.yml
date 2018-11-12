@@ -37,9 +37,9 @@ default-run: &test-template
             mv .coverage test-results/.coverage.$PYTHON_VERSION
             ls -all test-results/$PYTHON_VERSION/
       - persist_to_workspace: &persist-tests
-          root: test-results
+          root: test-results/$PYTHON_VERSION
           paths:
-            - $PYTHON_VERSION/coverage.xml
+            - coverage.xml
       - store_test_results: &store-results
           path: test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
