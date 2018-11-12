@@ -34,7 +34,7 @@ default-run: &test-template
             nosetests --with-coverage --cover-package=youcomment
             mkdir -p ~/test-results/$PYTHON_VERSION
             coverage xml -o ~/test-results/coverage.$PYTHON_VERSION.xml
-            rename .coverage .coverage.$PYTHON_VERSION
+            rename ./.coverage ./.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
           root: ~/test-results
           paths:
