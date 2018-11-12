@@ -32,17 +32,17 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            mkdir -p ~/test-results/{PYTHON_VERSION}
-            coverage xml -o ~/test-results/coverage{PYTHON_VERSION}.xml
-            rename .coverage .coverage.{PYTHON_VERSION}
+            mkdir -p ~/test-results/$PYTHON_VERSION
+            coverage xml -o ~/test-results/coverage.$PYTHON_VERSION.xml
+            rename .coverage .coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
           root: ~/test-results
           paths:
-            - {PYTHON_VERSION}
+            - $PYTHON_VERSION
       - store_test_results: &store-results
-          path: ~/test-results
+          path: ~/test-results/$PYTHON_VERSION
       - store_artifacts: &store-artifacts
-          path: ~/test-results
+          path: ~/test-results/$PYTHON_VERSION
         
 jobs:
   test-3.6:
