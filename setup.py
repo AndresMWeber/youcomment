@@ -48,7 +48,8 @@ setup(
                       'google-auth-oauthlib',
                       'google-auth-httplib2'],
     extras_require={
-        'test': ['coverage'],
+        'test': ['nose', 'coverage'],
+        'dev': ['nose', 'coverage']
     },
     project_urls={
         'Bug Reports': 'https://github.com/pypa/sampleproject/issues',
