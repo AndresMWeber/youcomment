@@ -25,6 +25,7 @@ default-run: &test-template
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
+            pip install --upgrade pip
             pip install -e .[dev]
             pip install nose coverage
             mkdir test-results
@@ -86,6 +87,7 @@ jobs:
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install codacy-coverage coverage
+            pip install --upgrade pip
             cd test-results
             coverage combine
             coverage xml
