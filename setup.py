@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from os import path
-from io import open
+import io
 import re
 
 __here__ = path.abspath(path.dirname(__file__))
@@ -8,15 +8,15 @@ __project__ = 'youcomment'
 __version__ = '0.0.0'
 __url__ = 'https://github.com/andresmweber/%s' % __project__
 
-with open(path.join(__here__, __project__, 'version.py')) as ver_file:
+with io.open(path.join(__here__, __project__, 'version.py')) as ver_file:
     mo = re.search(
         r"^__version__ = ['\"]([^'\"]*)['\"]", ver_file.read(), re.M)
     __version__ = mo.group(1)
 
-with open(path.join(__here__, 'README.md'), encoding='utf-8') as f:
+with io.open(path.join(__here__, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-with open(path.join(__here__, 'history.md'), encoding='utf-8') as f:
+with io.open(path.join(__here__, 'history.md'), encoding='utf-8') as f:
     history = f.read()
 
 setup(
@@ -48,7 +48,8 @@ setup(
                       'google-auth-oauthlib',
                       'google-auth-httplib2'],
     extras_require={
-        'test': ['coverage'],
+        'test': ['nose', 'coverage'],
+        'dev': ['nose', 'coverage']
     },
     project_urls={
         'Bug Reports': 'https://github.com/pypa/sampleproject/issues',

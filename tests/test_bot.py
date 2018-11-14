@@ -1,5 +1,4 @@
 from tests.basetest import BaseTest
-from youcomment.conf import CHECKED_FILE
 from youcomment.bot import YouCompareBot
 
 
