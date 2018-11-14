@@ -85,7 +85,7 @@ jobs:
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
-            pip install codacy-coverage
+            pip install codacy-coverage coverage
             cd test-results
             coverage combine
             coverage xml
