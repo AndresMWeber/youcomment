@@ -47,9 +47,9 @@ default-run: &test-template
             rm -R ~/test-results/python
             mv .coverage ~/test-results/.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
-          root: .
+          root: ~/
           paths:
-            - ~/test-results
+            - test-results
 jobs:
   test-3.6:
     <<: *test-template
