@@ -94,6 +94,7 @@ jobs:
       - run:
           name: Combine/upload coverage
           command: |
+            . venv/bin/activate
             cd coverage-files
             coverage combine
             coverage xml
