@@ -6,51 +6,62 @@
 A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
 
 ### Where to look
+---
 
-*   `youcomment/youcomment.py`: the actual bot
-*   `youcomment/reddit.py`: the handler for all reddit api commands
-*   `youcomment/youtube.py`: the handler for all youtube api commands
-*   `youcomment/config.py`: the configuration file
-*   `youcomment/post_template.txt`: the template message
-*   `youcomment/`: a module for comparing reddit and youtube top-level comments
-*   `tests/`: tests
-*   `.circleci/`: CircleCI configuration file
+| File                           | Description                                                  |
+| :---                           | :----------                                                  |
+| `youcomment/youcomment.py`     | the actual bot                                               |
+| `youcomment/reddit.py`         | the handler for all reddit api commands                      |
+| `youcomment/youtube.py`        | the handler for all youtube api commands                     |
+| `youcomment/config.py`         | the configuration file                                       |
+| `youcomment/post_template.txt` | the template message                                         |
+| `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
+| `tests/`                       | tests                                                        |
+| `.circleci/`                   | CircleCI configuration file                                  |
 
 ### How to install
 #### Install codebase/set up python
-*   `git clone` <https://github.com/AndresMWeber/youcomment.git>
 
-*   `python3 -m venv venv --no-site-packages`
+1) Clone the Repository:
 
-	-   This will create a virtual environment for the bot to run in
+`git clone` <https://github.com/AndresMWeber/youcomment.git>
 
-*   `source venv/bin/activate`
+2) Create a virtual environment for the bot to run in
 
-	-   Activate the bot
+`python3 -m venv venv --no-site-packages`
 
-*   `pip install -r requirements.txt`
+3) Activate the virtual env
 
-	-   Install requirements
+`source venv/bin/activate`
+
+4) Install requirements
+
+`pip install -r requirements.txt`
 
 #### Set up API Access (*CRUCIAL*)
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
-
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
-
 *   Set the following environment variables on | [mac](https://stackoverflow.com/questions/7501678/set-environment-variables-on-mac-os-x-lion) | [windows](https://superuser.com/questions/1334129/setting-an-environment-variable-in-windows-10-gpodder) | [linux](https://stackoverflow.com/questions/45502996/how-to-set-environment-variable-in-linux-permanently) |:
-    *   `YC_REDDIT_CLIENT_ID`: The generated field under "personal use script"
-    *   `YC_REDDIT_CLIENT_SECRET`: The generated Secret field.
-    *   `YC_REDDIT_USER`: The username to your reddit bot.
-    *   `YC_REDDIT_PASS`: The password to your reddit bot.
-    *   `YC_YOUTUBE_API_KEY`: The API Key you generated for Youtube.
-    -   __WARNING:__ without these environment variables set, the program will not function.
+
+| Key                       | Description                                     |
+| :--                       | -----------                                     |
+| `YC_REDDIT_CLIENT_ID`     | The generated field under "personal use script" |
+| `YC_REDDIT_CLIENT_SECRET` | The generated Secret field.                     |
+| `YC_REDDIT_USER`          | The username to your reddit bot.                |
+| `YC_REDDIT_PASS`          | The password to your reddit bot.                |
+| `YC_YOUTUBE_API_KEY`      | The API Key you generated for Youtube.          |
+
+*   __WARNING:__ without these environment variables set, the program will not function.
 
 ### Developing
+
 You can run tests using a couple options while within the top git repo folder:
 *   `python setup.py test`
 *   `python -m unittest discover`
 
-### Info / Reddit-related questions / See the bot in action
+### Meet the Bot
+
+My current test subreddit it is active in is here:
 
 <https://reddit.com/r/test123456123456>
 
@@ -65,4 +76,4 @@ Feel free to make a new post if you want to test the bot
 
 ### LICENSE
 
-**MIT License**
+__MIT License__
