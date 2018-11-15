@@ -28,7 +28,7 @@ default-run: &test-template
             pip install --upgrade pip
             pip install -e .[dev]
             pip install nose coverage
-            mkdir test-results
+            mkdir -p test-results/python
       - save_cache:
           paths:
             - ./venv
@@ -38,18 +38,16 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            mkdir test-results/$PYTHON_VERSION
-            coverage xml -o test-results/$PYTHON_VERSION/coverage.xml
-            mv .coverage test-results/.coverage.$PYTHON_VERSION
-            ln test-results/$PYTHON_VERSION test-results/python
-
+            coverage xml -o test-results/python/coverage.xml
       - store_test_results: &store-results
           path: test-results/python
       - store_artifacts: &store-artifacts
           path: test-results/python
       - run:
           name: Clean up symlink
-          command: rm test-results/python
+          command: |
+            rm -R test-results/python
+            mv .coverage test-results/.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
           root: .
           paths:
