@@ -18,15 +18,19 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 ### How to install
 #### Install codebase/set up python
-*   `git clone` https://github.com/AndresMWeber/youcomment.git
+*   `git clone` <https://github.com/AndresMWeber/youcomment.git>
+
 *   `python3 -m venv venv --no-site-packages`
-	*   this will create a virtual environment for the bot to run in
+
+	-   This will create a virtual environment for the bot to run in
 
 *   `source venv/bin/activate`
-	*   activate the bot
+
+	-   Activate the bot
 
 *   `pip install -r requirements.txt`
-	*   install requirements
+
+	-   Install requirements
 
 #### Set up API Access (*CRUCIAL*)
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
@@ -39,7 +43,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
     *   `YC_REDDIT_USER`: The username to your reddit bot.
     *   `YC_REDDIT_PASS`: The password to your reddit bot.
     *   `YC_YOUTUBE_API_KEY`: The API Key you generated for Youtube.
-    -   *WARNING:* without these environment variables set, the program will not function.
+    -   __WARNING:__ without these environment variables set, the program will not function.
 
 ### Developing
 You can run tests using a couple options while within the top git repo folder:
