@@ -91,8 +91,8 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-      - run: Combine/upload coverage
-          name:
+      - run:
+          name: Combine/upload coverage
           command: |
             cd coverage-files
             coverage combine
