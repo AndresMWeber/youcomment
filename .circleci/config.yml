@@ -41,7 +41,7 @@ default-run: &test-template
             mkdir test-results/$PYTHON_VERSION
             coverage xml -o test-results/$PYTHON_VERSION/coverage.xml
             mv .coverage test-results/.coverage.$PYTHON_VERSION
-            ln test-results/.coverage.$PYTHON_VERSION test-results/python
+            ln test-results/$PYTHON_VERSION test-results/python
 
       - store_test_results: &store-results
           path: test-results/python
