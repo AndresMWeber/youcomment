@@ -7,9 +7,6 @@ omit =
     *.txt
     setup.py
 
-include =
-        ./*
-
 
 [report]
 exclude_lines =
