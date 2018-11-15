@@ -41,7 +41,7 @@ htmlcov/
 .tox/
 .nox/
 .coverage
-.coverage.*
+.coverage*
 .cache
 nosetests.xml
 coverage.xml
@@ -113,3 +113,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+!/.coveragerc
+.idea/
