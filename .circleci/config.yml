@@ -38,11 +38,11 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            coverage xml -o test-results/python/coverage.xml
+            coverage xml -o test-results/python/test-results.xml
       - store_test_results: &store-results
           path: test-results
       - run:
-          name: Clean up symlink
+          name: Clean test-results directory
           command: |
             rm -R test-results/python
             mv .coverage test-results/.coverage.$PYTHON_VERSION
