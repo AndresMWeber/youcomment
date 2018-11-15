@@ -29,6 +29,7 @@ default-run: &test-template
             pip install -e .[dev]
             pip install nose coverage
             mkdir -p ./test-results/python
+            mkdir coverage-files
       - save_cache:
           paths:
             - ./venv
@@ -37,21 +38,14 @@ default-run: &test-template
           name: Run tests
           command: |
             . venv/bin/activate
-            nosetests --with-coverage --cover-package=youcomment
-            coverage xml -o ./test-results/python/test-results.xml
-            pwd
-            find test-results
+            nosetests --with-coverage --cover-package=youcomment --with-xunit --xunit-file ./test-results/python/test-results.xml
+            mv .coverage ./coverage-files/.coverage.$PYTHON_VERSION
       - store_test_results: &store-results
           path: test-results
-      - run:
-          name: Clean test-results directory
-          command: |
-            rm -R ./test-results/python
-            mv .coverage ./test-results/.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
           root: .
           paths:
-            - test-results
+            - coverage-files
 jobs:
   test-3.6:
     <<: *test-template
@@ -82,14 +76,25 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/commentcomparebot/
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
       - run:
-          name: upload coverage
+          name: Set up env
           command: |
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install --upgrade pip
             pip install codacy-coverage coverage
-            cd test-results
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run: Combine/upload coverage
+          name:
+          command: |
+            cd coverage-files
             coverage combine
             coverage xml
             python-codacy-coverage -r coverage.xml
