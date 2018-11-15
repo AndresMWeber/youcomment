@@ -28,7 +28,7 @@ default-run: &test-template
             pip install --upgrade pip
             pip install -e .[dev]
             pip install nose coverage
-            mkdir -p test-results/python
+            mkdir -p ~/test-results/python
       - save_cache:
           paths:
             - ./venv
@@ -38,18 +38,18 @@ default-run: &test-template
           command: |
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
-            coverage xml -o test-results/python/test-results.xml
+            coverage xml -o ~/test-results/python/test-results.xml
       - store_test_results: &store-results
-          path: test-results
+          path: ~/test-results
       - run:
           name: Clean test-results directory
           command: |
-            rm -R test-results/python
-            mv .coverage test-results/.coverage.$PYTHON_VERSION
+            rm -R ~/test-results/python
+            mv .coverage ~/test-results/.coverage.$PYTHON_VERSION
       - persist_to_workspace: &persist-tests
           root: .
           paths:
-            - test-results
+            - ~/test-results
 jobs:
   test-3.6:
     <<: *test-template
