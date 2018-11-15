@@ -39,6 +39,7 @@ default-run: &test-template
             . venv/bin/activate
             nosetests --with-coverage --cover-package=youcomment
             coverage xml -o ./test-results/python/test-results.xml
+            find .
       - store_test_results: &store-results
           path: ~/test-results
       - run:
