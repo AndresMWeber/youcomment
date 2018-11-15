@@ -17,7 +17,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 | `youcomment/post_template.txt` | the template message                                         |
 | `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
 | `tests/`                       | tests                                                        |
-| `.circleci/`                    | CircleCI configuration file                                 |
+| `.circleci/`                   | CircleCI configuration file                                  |
 
 ### How to install
 #### Install codebase/set up python
@@ -41,7 +41,6 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 #### Set up API Access (*CRUCIAL*)
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
-
 *   Set the following environment variables on | [mac](https://stackoverflow.com/questions/7501678/set-environment-variables-on-mac-os-x-lion) | [windows](https://superuser.com/questions/1334129/setting-an-environment-variable-in-windows-10-gpodder) | [linux](https://stackoverflow.com/questions/45502996/how-to-set-environment-variable-in-linux-permanently) |:
 
 | Key                       | Description                                     |
