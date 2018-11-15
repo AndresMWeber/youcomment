@@ -40,9 +40,7 @@ default-run: &test-template
             nosetests --with-coverage --cover-package=youcomment
             coverage xml -o test-results/python/coverage.xml
       - store_test_results: &store-results
-          path: test-results/python
-      - store_artifacts: &store-artifacts
-          path: test-results/python
+          path: test-results
       - run:
           name: Clean up symlink
           command: |
