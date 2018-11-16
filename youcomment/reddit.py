@@ -11,6 +11,7 @@ class RedditYoutubeBot(Reddit):
     SUBMISSION_TRACKER = Counter()
     CHECKED_POSTS = []
     CHECKED_POST_FILE_PATH = conf.CHECKED_FILE
+    REDDIT_MAX_POSTS = conf.REDDIT_MAX_POSTS
 
     def __init__(self, subreddits=None):
         super(RedditYoutubeBot, self).__init__(client_id=conf.REDDIT_CLIENT_ID,
@@ -23,31 +24,42 @@ class RedditYoutubeBot(Reddit):
         self.CHECKED_POSTS.extend(self._get_checked_posts(self.CHECKED_POST_FILE_PATH))
 
     def run(self, subreddit_list=None):
-        submissions = 0
-        posts = []
+        """ Obtains up to self.REDDIT_MAX_POSTS number of posts from the subreddit_list stream.
+            Set self.REDDIT_MAX_POSTS to 0 to run indefinitely.
+
+        :param subreddit_list: list or str, list of subreddit names or just a name
+        :return: iter(praw.models.reddit.submission.Submission), generator list of submissions
+        """
+        submission_count = 0
         subreddit_list = subreddit_list or self.subreddit_list
+
         try:
             for submission in self.subreddit('+'.join(subreddit_list)).stream.submissions(pause_after=2):
+                submission_count += 1
+
+                if submission is None or self.REDDIT_MAX_POSTS != 0 and submission_count > self.REDDIT_MAX_POSTS:
+                    print(submission_count, self.REDDIT_MAX_POSTS)
+                    break
+
                 if not submission.id in self.CHECKED_POSTS:
                     self.CHECKED_POSTS.append(submission.id)
-                    posts.extend(self.process_post(submission))
-                if submissions >= conf.REDDIT_MAXPOSTS:
-                    break
-                submissions += 1
+                    print(self.subreddit('+'.join(subreddit_list)).banned())
+                    with open(self.CHECKED_POST_FILE_PATH, 'a') as checked_posts_file:
+                        checked_posts_file.write('\n'.join(submission.id))
+
+                    yield self.process_post(submission)
+
         except AttributeError:
             pass
 
-        self._write_checked_posts(self.CHECKED_POSTS)
-        return posts
 
     @staticmethod
     def process_post(post):
         try:
             yt.YoutubeVideoBot.parse_url(post.url)
-            return [post]
+            return post
         except IOError:
             pass
-        return []
 
     @staticmethod
     def _get_checked_posts(checked_posts_file_path):
@@ -63,10 +75,3 @@ class RedditYoutubeBot(Reddit):
         comments.sort(key=lambda comment: comment.score, reverse=True)
         return comments[:num_comments]
 
-    def _write_checked_posts(self, posts):
-        """ Internal function to write the checked posts to file
-
-        :param posts: list, list of post ids that have been checked
-        """
-        with open(self.CHECKED_POST_FILE_PATH, 'w') as checked_posts_file:
-            checked_posts_file.write('\n'.join(posts))
