@@ -46,7 +46,8 @@ setup(
                       'google-api-python-client',
                       'google-auth',
                       'google-auth-oauthlib',
-                      'google-auth-httplib2'],
+                      'google-auth-httplib2',
+                      'peewee'],
     extras_require={
         'test': ['nose', 'coverage'],
         'dev': ['nose', 'coverage']
