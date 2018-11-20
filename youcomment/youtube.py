@@ -1,6 +1,6 @@
 import re
 from googleapiclient.discovery import build
-
+from youcomment.database import YoutubeVideo
 import youcomment.conf as conf
 
 YOUTUBE_SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
@@ -41,22 +41,28 @@ class YoutubeVideoBot(object):
         self.client = build(*args, **kwargs)
 
     def run(self, url=None):
-        return self.top_comments(videoId=self.parse_url(url or self.url))
+        self.url = url or self.url
+        id = self.parse_url(self.url)
+        top_comments = self.top_comments(videoId=id)
+        YoutubeVideo.get_or_create(video_id=id, video_url=self.url)
+        return top_comments
 
     def get_all_comments(self, **kwargs):
         """ Obtains up to conf.YOUTUBE_COMMENTS_MAX_NUM comments for video at self.url
 
         """
         num_comments = 0
-        results = self.client.commentThreads().list(**kwargs).execute()
-        kwargs[PAGE_TOKEN] = results.get(NEXT_PAGE_TOKEN)
+        comment_tree_result = self.client.commentThreads().list(**kwargs).execute()
+        comments = []
+        kwargs[PAGE_TOKEN] = comment_tree_result.get(NEXT_PAGE_TOKEN)
 
         while kwargs[PAGE_TOKEN] and num_comments < conf.YOUTUBE_COMMENTS_MAX_NUM:
-            results.update(self.client.commentThreads().list(**kwargs).execute())
-            kwargs[PAGE_TOKEN] = results.get(NEXT_PAGE_TOKEN)
+            comment_tree_result.update(self.client.commentThreads().list(**kwargs).execute())
+            comments.extend(comment_tree_result[ITEMS])
+            kwargs[PAGE_TOKEN] = comment_tree_result.get(NEXT_PAGE_TOKEN)
             num_comments += POSTS_PER_PAGE
 
-        return results[ITEMS]
+        return comments
 
     def top_comments(self, **kwargs):
         """ Obtains the top comments (up to conf.YOUTUBE_NUM_TOP_COMMENTS) and stores them in a list
@@ -64,20 +70,20 @@ class YoutubeVideoBot(object):
         :return: list(dict), list of YouTube API json data for each comment
         """
         kwargs.update(YOUTUBE_KWARGS)
-        top_ten_comments = []
+        top_n_comments = []
+
         for comment in self.get_all_comments(**kwargs):
-            if len(top_ten_comments) == conf.YOUTUBE_NUM_TOP_COMMENTS:
-                break
             comment_id = comment[ID]
             comment = comment[SNIPPET][TOP_COMMENT][SNIPPET]
+            comment[ID] = comment_id
             comment_likes = comment[LIKE_COUNT]
 
             if comment_likes >= conf.YOUTUBE_LIKE_THRESHOLD:
                 comment[URL] = YOUTUBE_URL_TEMPLATE.format(URL=kwargs.get(VIDEO_ID), COMMENT=comment_id)
-                top_ten_comments.append(comment)
+                top_n_comments.append(comment)
 
-        top_ten_comments.sort(key=lambda d: d[LIKE_COUNT])
-        return top_ten_comments
+        top_n_comments.sort(key=lambda d: d[LIKE_COUNT], reverse=True)
+        return top_n_comments[:conf.YOUTUBE_NUM_TOP_COMMENTS]
 
     @staticmethod
     def parse_url(url):
