@@ -1,5 +1,4 @@
 from difflib import SequenceMatcher
-from pprint import pprint
 import time
 import praw
 import youcomment.conf as conf
@@ -17,7 +16,7 @@ class YouCompareBot(object):
     reddit_bot = rd.RedditYoutubeBot()
     youtube_bot = yt.YoutubeVideoBot()
     reply_template = ''
-    LIVE = conf.LIVE
+    LIVE = conf.YC_LIVE_MODE
 
     def __init__(self, subreddit=None):
         init_db()

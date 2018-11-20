@@ -2,7 +2,6 @@ from tests.basetest import BaseTest
 from youcomment.bot import YouCompareBot
 from youcomment.database import RedditPost, CrossCommentRelationship
 from youcomment.conf import DEFAULT_SUBREDDITS
-from praw import Reddit
 
 
 class TestBot(BaseTest):
