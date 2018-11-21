@@ -8,7 +8,7 @@ parse = yt.YoutubeVideoBot.parse_url
 class TestRun(TestCase):
     def test_default_run_valid(self):
         with warnings.catch_warnings():
-            yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run()
+            self.assertIsNotNone(yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run())
 
 
 class TestYoutubeURLParse(TestCase):

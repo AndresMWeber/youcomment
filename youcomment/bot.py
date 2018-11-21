@@ -89,7 +89,7 @@ class YouCompareBot(object):
                     praw.Reddit.comment(reddit_db_entry.id).reply(reply_body)
                     break
 
-                except praw.exceptions.APIException as e:
+                except praw.exceptions.APIException:
                     retries += 1
                     time.sleep(conf.REDDIT_REPLY_INTERVAL)
                     try_again = True if retries < conf.REDDIT_NUM_RETRIES else False
