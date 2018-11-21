@@ -57,23 +57,22 @@ You have the option of running the bot in a few different ways:
 
 __Python__
 
-```
-$ python
->>> from youcomment.bot import YouCompareBot
->>> bot = YouCompareBot()
->>> bot.run()
+```python
+from youcomment.bot import YouCompareBot
+bot = YouCompareBot()
+bot.run()
 ```
 
-```
-$ python
->>> import youcomment.bot
+```python
+import youcomment.bot
 ```
 
 __CLI__
 
+```shell
+$ youcomment
 ```
-$
-```
+
 ### Developing
 
 You can run tests using a couple options while within the top git repo folder:

@@ -42,9 +42,9 @@ class YoutubeVideoBot(object):
 
     def run(self, url=None):
         self.url = url or self.url
-        id = self.parse_url(self.url)
-        top_comments = self.top_comments(videoId=id)
-        YoutubeVideo.get_or_create(video_id=id, video_url=self.url)
+        video_id = self.parse_url(self.url)
+        top_comments = self.top_comments(videoId=video_id)
+        YoutubeVideo.get_or_create(video_id=video_id, video_url=self.url)
         return top_comments
 
     def get_all_comments(self, **kwargs):
