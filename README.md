@@ -6,16 +6,19 @@
 A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
 
 # Table of Contents
-1. [Files Breakdown](#files-breakdown)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [Developing](#developing)
-5. [Meet the Bot](#meet-the-bot)
-6. [Contributing](#contributing)
-7. [License](#license)
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [Developing](#developing)
+   *   [Python/Git set up ](#python-and-git-set-up)
+   *   [Set up API Access __(CRUCIAL)__](#set-up-api-access)
+4. [Meet the Bot](#meet-the-bot)
+5. [Contributing](#contributing)
+6. [File Descriptions](#file-descriptions)
+7. [Changelog](#version-history)
+8. [License](#license)
 
 ### Installation
-#### Python/Git set up 
+#### Python and Git set up 
 
 1) Clone the Repository:
 
@@ -33,7 +36,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 `pip install -r requirements.txt`
 
-#### Set up API Access (*CRUCIAL*)
+#### Set up API Access
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
 *   Set the following environment variables on | [mac](https://stackoverflow.com/questions/7501678/set-environment-variables-on-mac-os-x-lion) | [windows](https://superuser.com/questions/1334129/setting-an-environment-variable-in-windows-10-gpodder) | [linux](https://stackoverflow.com/questions/45502996/how-to-set-environment-variable-in-linux-permanently) |:
@@ -92,19 +95,24 @@ Feel free to make a new post if you want to test the bot
 *   If you find any bug or exploit please tell me: I will try to fix them or if you want you can fix them and I will include your changes in the project.
 *   If you find a way to improve the bot, please share it with everybody.
 
-### Files Breakdown
+### File Descriptions
 ---
 
-| File                           | Description                                                  |
-| :---                           | :----------                                                  |
-| `youcomment/youcomment.py`     | the actual bot                                               |
-| `youcomment/reddit.py`         | the handler for all reddit api commands                      |
-| `youcomment/youtube.py`        | the handler for all youtube api commands                     |
-| `youcomment/config.py`         | the configuration file                                       |
-| `youcomment/post_template.txt` | the template message                                         |
-| `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
-| `tests/`                       | tests                                                        |
-| `.circleci/`                   | CircleCI configuration file                                  |
+| File                                | Description                                                  |
+| :---                                | :----------                                                  |
+| `youcomment/`                       | A module for comparing reddit and youtube top-level comments |
+| `youcomment/bot.py`                 | The actual bot                                               |
+| `youcomment/reddit.py`              | The handler for all reddit api commands                      |
+| `youcomment/youtube.py`             | The handler for all youtube api commands                     |
+| `youcomment/database.py`            | The database manager file                                    |
+| `youcomment/config.py`              | The configuration file                                       |
+| `youcomment/version.py`             | Contains only the project version number                     |
+| `youcomment/data/post_template.txt` | The message template                                         |
+| `tests/`                            | Tests                                                        |
+| `.circleci/config.yml`              | CircleCI configuration file                                  |
+
+### Version History
+[__Changelog__](CHANGELOG.md)
 
 ### License
 [__MIT License__](LICENSE.md)
