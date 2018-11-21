@@ -1,26 +1,21 @@
 ## [YouComment](http://www.reddit.com/u/youtube_comment_bot)
 [![CircleCI](https://circleci.com/gh/AndresMWeber/youcomment.svg?style=svg)](https://circleci.com/gh/AndresMWeber/youcomment)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bbac98237544bc49d40ea95ee5e8ffc)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
-[![Python Versosn](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
+[![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
 
 A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
 
-### Where to look
----
+# Table of Contents
+1. [Files Breakdown](#files-breakdown)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Developing](#developing)
+5. [Meet the Bot](#meet-the-bot)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-| File                           | Description                                                  |
-| :---                           | :----------                                                  |
-| `youcomment/youcomment.py`     | the actual bot                                               |
-| `youcomment/reddit.py`         | the handler for all reddit api commands                      |
-| `youcomment/youtube.py`        | the handler for all youtube api commands                     |
-| `youcomment/config.py`         | the configuration file                                       |
-| `youcomment/post_template.txt` | the template message                                         |
-| `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
-| `tests/`                       | tests                                                        |
-| `.circleci/`                   | CircleCI configuration file                                  |
-
-### How to install
-#### Install codebase/set up python
+### Installation
+#### Python/Git set up 
 
 1) Clone the Repository:
 
@@ -53,7 +48,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 *   __WARNING:__ without these environment variables set, the program will not function.
 
-### Runtime
+### Usage
 
 You have the option of running the bot in a few different ways:
 
@@ -90,13 +85,27 @@ My current test subreddit it is active in is here:
 
 Feel free to make a new post if you want to test the bot
 
-### Want to help or want help
+### Contributing
 
 *   If you want to help please feel free to do it.
 *   If you need help please fell free to ask me.
 *   If you find any bug or exploit please tell me: I will try to fix them or if you want you can fix them and I will include your changes in the project.
 *   If you find a way to improve the bot, please share it with everybody.
 
-### LICENSE
+### Files Breakdown
+---
 
-__MIT License__
+| File                           | Description                                                  |
+| :---                           | :----------                                                  |
+| `youcomment/youcomment.py`     | the actual bot                                               |
+| `youcomment/reddit.py`         | the handler for all reddit api commands                      |
+| `youcomment/youtube.py`        | the handler for all youtube api commands                     |
+| `youcomment/config.py`         | the configuration file                                       |
+| `youcomment/post_template.txt` | the template message                                         |
+| `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
+| `tests/`                       | tests                                                        |
+| `.circleci/`                   | CircleCI configuration file                                  |
+
+### License
+[__MIT License__](LICENSE.md)
+
