@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Base feature set added
 
+## [0.4.0] - 2018-11-21
+### Added
+*   CLI entry point/argparser module.
+*   Heroku Procfile
+
+### Changed
+*   Added class properties to YouCompareBot to enable changing vars at runtime
+    -   YouCompareBot.post_template_file = conf.POST_TEMPLATE
+    -   YouCompareBot.SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
+    -   YouCompareBot.REDDIT_REPLY_INTERVAL = conf.REDDIT_REPLY_INTERVAL
+    -   YouCompareBot.REDDIT_NUM_RETRIES = conf.REDDIT_NUM_RETRIES
+*   Removed unused RedditYoutubeBot.SUBMISSION_TRACKER
+
 ## [0.3.0] - 2018-11-21
 ### Changed
 *   Refactored code base to use SQL database structure with [peewee](https://peewee.readthedocs.io/en/latest/index.html)
@@ -45,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 *   config.py -> conf.py to fix any namespace issues.
 
 ## Release Comparisons
+-   [0.4.0](https://github.com/AndresMWeber/youcomment/compare/v0.3.0-alpha...v0.4.0-alpha)
 -   [0.3.0](https://github.com/AndresMWeber/youcomment/compare/v0.2.0-alpha...v0.3.0-alpha)
 -   [0.2.0](https://github.com/AndresMWeber/youcomment/compare/v0.2.0-alpha...v0.1.0-alpha)
 -   [0.1.0](https://github.com/AndresMWeber/youcomment/compare/e62c443...v0.1.0-alpha)
