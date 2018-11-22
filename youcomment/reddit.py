@@ -9,7 +9,6 @@ import peewee
 
 
 class RedditYoutubeBot(Reddit):
-    SUBMISSION_TRACKER = Counter()
     REDDIT_MAX_POSTS = conf.REDDIT_MAX_POSTS
 
     def __init__(self, subreddits=None):
