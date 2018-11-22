@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.4.0] - 2018-11-21
 ### Added
 *   CLI entry point/argparser module.
+*   Heroku Procfile
 
 ### Changed
 *   Added class properties to YouCompareBot to enable changing vars at runtime
@@ -57,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 *   config.py -> conf.py to fix any namespace issues.
 
 ## Release Comparisons
+-   [0.4.0](https://github.com/AndresMWeber/youcomment/compare/v0.3.0-alpha...v0.4.0-alpha)
 -   [0.3.0](https://github.com/AndresMWeber/youcomment/compare/v0.2.0-alpha...v0.3.0-alpha)
 -   [0.2.0](https://github.com/AndresMWeber/youcomment/compare/v0.2.0-alpha...v0.1.0-alpha)
 -   [0.1.0](https://github.com/AndresMWeber/youcomment/compare/e62c443...v0.1.0-alpha)
