@@ -20,3 +20,4 @@ six==1.11.0
 update-checker==0.16
 uritemplate==3.0.0
 urllib3==1.24.1
+newrelic
