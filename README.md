@@ -2,6 +2,7 @@
 [![CircleCI](https://circleci.com/gh/AndresMWeber/youcomment.svg?style=svg)](https://circleci.com/gh/AndresMWeber/youcomment)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bbac98237544bc49d40ea95ee5e8ffc)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
 [![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
+[![Heroku App Status](http://heroku-shields.herokuapp.com/youcomment)](https://youcomment.herokuapp.com)
 
 A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
 
