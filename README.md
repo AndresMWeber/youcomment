@@ -84,7 +84,7 @@ You can run tests using a couple options while within the top git repo folder:
 
 My current test subreddit it is active in is here:
 
-<https://reddit.com/r/test123456123456>
+<https://reddit.com/r/you_comment_bot>
 
 Feel free to make a new post if you want to test the bot
 

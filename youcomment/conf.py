@@ -4,7 +4,7 @@ from six import iteritems
 import youcomment.version as version
 
 # Modifiable Settings
-DEFAULT_SUBREDDITS = ["test123456123456"]
+DEFAULT_SUBREDDITS = ["you_comment_bot"]
 SIMILARITY_LIMIT = 0.75
 YOUTUBE_COMMENTS_PER_PAGE = 100
 YOUTUBE_COMMENTS_MAX_NUM = 500
