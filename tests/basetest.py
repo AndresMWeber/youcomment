@@ -1,13 +1,15 @@
 from unittest import TestCase
-from youcomment.database import wipe_db
+import youcomment.database as db
+import warnings
 
 
 class BaseTest(TestCase):
 
     def setUp(self):
-        wipe_db()
+        db.wipe_db()
+        warnings.filterwarnings("ignore", category=ResourceWarning, message="unclosed.*<ssl.SSLSocket.*>")
         super(BaseTest, self).setUp()
 
     def tearDown(self):
-        wipe_db()
+        db.wipe_db()
         super(BaseTest, self).tearDown()

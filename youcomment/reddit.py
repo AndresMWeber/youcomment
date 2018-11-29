@@ -1,16 +1,20 @@
-from collections import Counter
 from praw import Reddit
 from praw.models import Comment
+import peewee
 
+from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 import youcomment.youtube as yt
 import youcomment.conf as conf
 from youcomment.database import RedditPost, Subreddit
-import peewee
 
 
-class RedditYoutubeBot(Reddit):
+class RedditYoutubeBot(Reddit, BotMixin):
     REDDIT_MAX_POSTS = conf.REDDIT_MAX_POSTS
+    ENV_VAR_DEPENDENCIES = {'YC_REDDIT_PASS': conf.REDDIT_PASS,
+                            'YC_REDDIT_CLIENT_ID': conf.REDDIT_CLIENT_ID,
+                            'YC_REDDIT_CLIENT_SECRET': conf.REDDIT_CLIENT_SECRET}
 
+    @ensure_instance_env_var_dependencies
     def __init__(self, subreddits=None):
         """
 

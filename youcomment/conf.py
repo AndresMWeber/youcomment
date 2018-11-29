@@ -1,6 +1,5 @@
 from os import getenv, path
-from six import iteritems
-
+from logging import getLogger
 import youcomment.version as version
 
 # Modifiable Settings
@@ -30,11 +29,4 @@ __here__ = path.abspath(path.dirname(__file__))
 POST_TEMPLATE = path.join(__here__, DATA_DIR, 'post_template.txt')
 DB_PATH = path.join(__here__, DATA_DIR, DB_NAME)
 
-# Env Var Checks
-for k, v in iteritems({'YC_REDDIT_USER': REDDIT_USER,
-                       'YC_REDDIT_PASS': REDDIT_PASS,
-                       'YC_CLIENT_ID': REDDIT_CLIENT_ID,
-                       'YC_CLIENT_SECRET': REDDIT_CLIENT_SECRET,
-                       'YC_YOUTUBE_API_KEY': YOUTUBE_API_KEY}):
-    if not v:
-        EnvironmentError('No environment variable %s' % k)
+LOG = getLogger(__name__)

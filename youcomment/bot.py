@@ -1,9 +1,10 @@
 from difflib import SequenceMatcher
 import time
 import praw
-import youcomment.conf as conf
+
 import youcomment.reddit as rd
 import youcomment.youtube as yt
+import youcomment.conf as conf
 from youcomment.database import (CrossCommentRelationship,
                                  YoutubeComment,
                                  RedditPost,
