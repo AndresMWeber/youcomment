@@ -1,1 +1,1 @@
-web: newrelic-admin run-program python -m youcomment.bot.main
+web: newrelic-admin run-program python -m youcomment.__main__

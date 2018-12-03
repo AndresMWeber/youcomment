@@ -103,8 +103,3 @@ class YouCompareBot(object):
     @staticmethod
     def similarity(str1, str2):
         return SequenceMatcher(None, str1, str2).ratio()
-
-
-if __name__ == '__main__':
-    bot = YouCompareBot()
-    bot.run()
