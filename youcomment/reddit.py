@@ -44,6 +44,9 @@ class RedditYoutubeBot(Reddit, BotMixin):
 
         try:
             for post in self.subreddit(multi_reddit_string).stream.submissions(pause_after=2):
+                if post:
+                    youlog.log.info('Checking reddit post %s.' % post.id)
+
                 post_count += 1
 
                 if post is None or self.REDDIT_MAX_POSTS != 0 and post_count > self.REDDIT_MAX_POSTS:
