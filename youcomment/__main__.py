@@ -16,9 +16,10 @@ def entry():
         parser.add_argument('-s', '--subreddits', type=str, nargs="+",
                             help='A space-separated list of subreddits to run the bot on.')
 
-        parser.add_argument('-i', '--similarity', type=float,
+        parser.add_argument('-a', '--affinity', type=float,
                             help='Specify if you want to override the default similarity limit (default: 0.75)')
-
+        parser.add_argument('-i', '--interval', type=int,
+                            help='Milisecond delay interval for the bot to run its check.')
         namespace = parser.parse_args()
 
         bot_instance = youbot.YouCompareBot(subreddits=namespace.subreddits)

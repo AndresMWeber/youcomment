@@ -2,6 +2,7 @@ from difflib import SequenceMatcher
 import time
 import praw
 
+import youcomment.youlog as youlog
 import youcomment.reddit as rd
 import youcomment.youtube as yt
 import youcomment.conf as conf
@@ -67,7 +68,9 @@ class YouCompareBot(object):
                                                         similarity=similarity)
                         break
 
+            youlog.log.info('Processed reddit post %s.' % post.id)
             self.make_replies()
+        youlog.log.info('Reached end of reddit post stream...exiting.')
 
         return similar_posts
 
