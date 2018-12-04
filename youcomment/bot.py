@@ -1,9 +1,11 @@
 from difflib import SequenceMatcher
 import time
 import praw
-import youcomment.conf as conf
+
+import youcomment.youlog as youlog
 import youcomment.reddit as rd
 import youcomment.youtube as yt
+import youcomment.conf as conf
 from youcomment.database import (CrossCommentRelationship,
                                  YoutubeComment,
                                  RedditPost,
@@ -15,14 +17,19 @@ from youcomment.database import (CrossCommentRelationship,
 class YouCompareBot(object):
     reddit_bot = rd.RedditYoutubeBot()
     youtube_bot = yt.YoutubeVideoBot()
+    post_template_file = conf.POST_TEMPLATE
     reply_template = ''
+
     LIVE = conf.YC_LIVE_MODE
+    SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
+    REDDIT_REPLY_INTERVAL = conf.REDDIT_REPLY_INTERVAL
+    REDDIT_NUM_RETRIES = conf.REDDIT_NUM_RETRIES
 
-    def __init__(self, subreddit=None):
+    def __init__(self, subreddits=None):
         init_db()
-        self.reddit_bot.subreddit_list = subreddit or self.reddit_bot.subreddit_list
+        self.reddit_bot.subreddit_list = subreddits or self.reddit_bot.subreddit_list
 
-        with open(conf.POST_TEMPLATE, 'r') as f:
+        with open(self.post_template_file, 'r') as f:
             self.reply_template = f.read()
 
     def run(self, subreddits=None):
@@ -34,7 +41,7 @@ class YouCompareBot(object):
         :param subreddits: list or str, list of subreddit names or just a name
         :return: list(tuple(float, praw.models.reddit.comment.Comment, dict)), list of (similarity, youtube video data, reddit comment)
         """
-        subreddits = rd.RedditYoutubeBot.resolve_subreddit_list(subreddits)
+        subreddits = rd.RedditYoutubeBot.resolve_subreddit_list(subreddits or self.reddit_bot.subreddit_list)
         similar_posts = []
 
         for post in self.reddit_bot.run(subreddits):
@@ -49,7 +56,7 @@ class YouCompareBot(object):
                 for youtube_comment in youtube_comments:
                     similarity = self.similarity(youtube_comment['textDisplay'], reddit_comment.body)
 
-                    if similarity > conf.SIMILARITY_LIMIT:
+                    if similarity > self.SIMILARITY_LIMIT:
                         similar_posts.append((similarity, reddit_comment, youtube_comment))
 
                         y_comment = YoutubeComment.create(comment_id=youtube_comment['id'],
@@ -61,7 +68,9 @@ class YouCompareBot(object):
                                                         similarity=similarity)
                         break
 
+            youlog.log.info('Processed reddit post %s.' % post.id)
             self.make_replies()
+        youlog.log.info('Reached end of reddit post stream...exiting.')
 
         return similar_posts
 
@@ -89,16 +98,11 @@ class YouCompareBot(object):
                     praw.Reddit.comment(reddit_db_entry.id).reply(reply_body)
                     break
 
-                except praw.exceptions.APIException as e:
+                except praw.exceptions.APIException:
                     retries += 1
-                    time.sleep(conf.REDDIT_REPLY_INTERVAL)
-                    try_again = True if retries < conf.REDDIT_NUM_RETRIES else False
+                    time.sleep(self.REDDIT_REPLY_INTERVAL)
+                    try_again = True if retries < self.REDDIT_NUM_RETRIES else False
 
     @staticmethod
     def similarity(str1, str2):
         return SequenceMatcher(None, str1, str2).ratio()
-
-
-if __name__ == '__main__':
-    bot = YouCompareBot()
-    bot.run()

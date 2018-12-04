@@ -1,26 +1,25 @@
 ## [YouComment](http://www.reddit.com/u/youtube_comment_bot)
 [![CircleCI](https://circleci.com/gh/AndresMWeber/youcomment.svg?style=svg)](https://circleci.com/gh/AndresMWeber/youcomment)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bbac98237544bc49d40ea95ee5e8ffc)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
-[![Python Versosn](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
+[![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
+[![Heroku App Status](http://heroku-shields.herokuapp.com/youcomment)](https://youcomment.herokuapp.com)
 
 A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
 
-### Where to look
----
+# Table of Contents
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [Developing](#developing)
+   *   [Python/Git set up ](#python-and-git-set-up)
+   *   [Set up API Access __(CRUCIAL)__](#set-up-api-access)
+4. [Meet the Bot](#meet-the-bot)
+5. [Contributing](#contributing)
+6. [File Descriptions](#file-descriptions)
+7. [Changelog](#version-history)
+8. [License](#license)
 
-| File                           | Description                                                  |
-| :---                           | :----------                                                  |
-| `youcomment/youcomment.py`     | the actual bot                                               |
-| `youcomment/reddit.py`         | the handler for all reddit api commands                      |
-| `youcomment/youtube.py`        | the handler for all youtube api commands                     |
-| `youcomment/config.py`         | the configuration file                                       |
-| `youcomment/post_template.txt` | the template message                                         |
-| `youcomment/`                  | a module for comparing reddit and youtube top-level comments |
-| `tests/`                       | tests                                                        |
-| `.circleci/`                   | CircleCI configuration file                                  |
-
-### How to install
-#### Install codebase/set up python
+### Installation
+#### Python and Git set up 
 
 1) Clone the Repository:
 
@@ -38,7 +37,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 `pip install -r requirements.txt`
 
-#### Set up API Access (*CRUCIAL*)
+#### Set up API Access
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
 *   Set the following environment variables on | [mac](https://stackoverflow.com/questions/7501678/set-environment-variables-on-mac-os-x-lion) | [windows](https://superuser.com/questions/1334129/setting-an-environment-variable-in-windows-10-gpodder) | [linux](https://stackoverflow.com/questions/45502996/how-to-set-environment-variable-in-linux-permanently) |:
@@ -53,29 +52,28 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 *   __WARNING:__ without these environment variables set, the program will not function.
 
-### Runtime
+### Usage
 
 You have the option of running the bot in a few different ways:
 
 __Python__
 
-```
-$ python
->>> from youcomment.bot import YouCompareBot
->>> bot = YouCompareBot()
->>> bot.run()
+```python
+from youcomment.bot import YouCompareBot
+bot = YouCompareBot()
+bot.run()
 ```
 
-```
-$ python
->>> import youcomment.bot
+```python
+import youcomment.bot
 ```
 
 __CLI__
 
+```shell
+$ youcomment
 ```
-$
-```
+
 ### Developing
 
 You can run tests using a couple options while within the top git repo folder:
@@ -86,17 +84,36 @@ You can run tests using a couple options while within the top git repo folder:
 
 My current test subreddit it is active in is here:
 
-<https://reddit.com/r/test123456123456>
+<https://reddit.com/r/you_comment_bot>
 
 Feel free to make a new post if you want to test the bot
 
-### Want to help or want help
+### Contributing
 
 *   If you want to help please feel free to do it.
 *   If you need help please fell free to ask me.
 *   If you find any bug or exploit please tell me: I will try to fix them or if you want you can fix them and I will include your changes in the project.
 *   If you find a way to improve the bot, please share it with everybody.
 
-### LICENSE
+### File Descriptions
+---
 
-__MIT License__
+| File                                | Description                                                  |
+| :---                                | :----------                                                  |
+| `youcomment/`                       | A module for comparing reddit and youtube top-level comments |
+| `youcomment/bot.py`                 | The actual bot                                               |
+| `youcomment/reddit.py`              | The handler for all reddit api commands                      |
+| `youcomment/youtube.py`             | The handler for all youtube api commands                     |
+| `youcomment/database.py`            | The database manager file                                    |
+| `youcomment/config.py`              | The configuration file                                       |
+| `youcomment/version.py`             | Contains only the project version number                     |
+| `youcomment/data/post_template.txt` | The message template                                         |
+| `tests/`                            | Tests                                                        |
+| `.circleci/config.yml`              | CircleCI configuration file                                  |
+
+### Version History
+[__Changelog__](CHANGELOG.md)
+
+### License
+[__MIT License__](LICENSE.md)
+

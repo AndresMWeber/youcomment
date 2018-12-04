@@ -1,14 +1,32 @@
 from unittest import TestCase
 import warnings
+import os
 import youcomment.youtube as yt
+from youcomment.errors import EnvironmentError
+from googleapiclient.errors import HttpError
 
 parse = yt.YoutubeVideoBot.parse_url
 
 
 class TestRun(TestCase):
     def test_default_run_valid(self):
-        with warnings.catch_warnings():
-            yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run()
+        error, num_retries, retry_count = True, 3, 0
+        while error and not retry_count >= num_retries:
+            try:
+                with warnings.catch_warnings():
+                    self.assertIsNotNone(yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run())
+                error = False
+
+            except HttpError:
+                retry_count += 1
+
+    def test_env_var_checking(self):
+        for key in list(yt.YoutubeVideoBot.ENV_VAR_DEPENDENCIES):
+            reddit_pass = os.getenv(key)
+            os.environ[key] = ''
+            with self.assertRaises(EnvironmentError):
+                yt.YoutubeVideoBot()
+            os.environ[key] = reddit_pass
 
 
 class TestYoutubeURLParse(TestCase):

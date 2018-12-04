@@ -1,3 +1,4 @@
+APScheduler==3.5.3
 cachetools==3.0.0
 certifi==2018.10.15
 chardet==3.0.4
@@ -20,3 +21,4 @@ six==1.11.0
 update-checker==0.16
 uritemplate==3.0.0
 urllib3==1.24.1
+newrelic

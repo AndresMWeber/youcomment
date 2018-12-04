@@ -16,15 +16,15 @@ with io.open(path.join(__here__, __project__, 'version.py')) as ver_file:
 with io.open(path.join(__here__, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-with io.open(path.join(__here__, 'history.md'), encoding='utf-8') as f:
-    history = f.read()
+with io.open(path.join(__here__, 'CHANGELOG.md'), encoding='utf-8') as f:
+    changelog = f.read()
 
 setup(
     name=__project__,
     version=__version__,
     url=__url__,
     description='A bot for comparing top-level youtube comments and reddit comments.',
-    long_description='\n\n'.join([long_description, history]),
+    long_description='\n\n'.join([long_description, changelog]),
     author='Andres Weber',
     author_email='andresmweber@gmail.com',
     classifiers=[

@@ -2,6 +2,7 @@ import re
 from googleapiclient.discovery import build
 from youcomment.database import YoutubeVideo
 import youcomment.conf as conf
+from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 
 YOUTUBE_SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -27,9 +28,12 @@ YOUTUBE_KWARGS = {'maxResults': conf.YOUTUBE_COMMENTS_PER_PAGE,
                   'part': POST_PART_QUERY}
 
 
-class YoutubeVideoBot(object):
+class YoutubeVideoBot(BotMixin):
+    ENV_VAR_DEPENDENCIES = {'YC_YOUTUBE_API_KEY': conf.YOUTUBE_API_KEY}
 
+    @ensure_instance_env_var_dependencies
     def __init__(self, video_url=None, cache_discovery=False):
+        super(YoutubeVideoBot, self).__init__()
         self.client = None
         self.url = video_url
         self.login(YOUTUBE_API_SERVICE_NAME,
@@ -42,9 +46,9 @@ class YoutubeVideoBot(object):
 
     def run(self, url=None):
         self.url = url or self.url
-        id = self.parse_url(self.url)
-        top_comments = self.top_comments(videoId=id)
-        YoutubeVideo.get_or_create(video_id=id, video_url=self.url)
+        video_id = self.parse_url(self.url)
+        top_comments = self.top_comments(videoId=video_id)
+        YoutubeVideo.get_or_create(video_id=video_id, video_url=self.url)
         return top_comments
 
     def get_all_comments(self, **kwargs):
