@@ -108,7 +108,7 @@ class YouCompareBot(object):
                 try:
                     reply_body = self.reply_template % (100 * round(cross_comment.similarity, 4),
                                                         youtube_db_entry.permalink)
-                    praw.Reddit.comment(reddit_db_entry.id).reply(reply_body)
+                    praw.Reddit.comment(reddit_db_entry.comment_id).reply(reply_body)
                     break
 
                 except praw.exceptions.APIException:
