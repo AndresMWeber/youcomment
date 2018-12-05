@@ -1,7 +1,33 @@
 <!doctype html>
-<title>YouCommentBot Status</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<div class=page>
-    <h1>YouCommentBot</h1>
-    {% block body %}{% endblock %}
+<head>
+    <meta charset="utf-8">
+    <title>YouCommentBot</title>
+    <meta name="description" content="Reddit Youtube Bot Status Page">
+    <meta name="author" content="Andres Weber">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container-narrow">
+            <a class="brand" href="https://youcomment.herokuapp.com/">YouCommentBot</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-narrow">
+    <div class="content">
+        <div class="page-header">
+            <h2>YouCommentBot Status
+                <small>A Reddit bot for comparing top-level youtube comments and reddit comments.</small>
+            </h2>
+        </div>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+        <div class=page>
+            <h1>Status</h1>
+            {% block body %}{% endblock %}
+        </div>
+    </div>
 </div>

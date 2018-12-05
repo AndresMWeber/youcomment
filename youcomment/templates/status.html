@@ -1,0 +1,61 @@
+{% extends "default.html" %}
+
+{% block body %}
+<div class=body>
+    <div class="container-narrow">
+        <h1>
+            Bot Running: <b>{{ state }}</b>
+        </h1>
+    </div>
+
+    <div class="container-narrow">
+        <table style="width:80%">
+            <tr>
+                <th>Replies</th>
+            </tr>
+            {% for reply in replies %}
+            <tr>
+                <td>
+                    {{ reply.reddit_comment.permalink }}<-({{ reply.similarity }})->{{ reply.youtube_comment.permalink }} : replied= {{ reply.replied }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td><em>The bot has not made any replies yet.</em></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="container-narrow">
+        <table style="width:80%">
+            <tr>
+                <th>Posts</th>
+            </tr>
+            {% for post in posts %}
+            <tr>
+                <td>
+                    <h2><a href="{{ post.permalink }}">{{ post.permalink }}</a></h2>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td><em>No posts have been checked so far.</em></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="container-narrow">
+        <h1>Blacklists</h1>
+        <ul class=blacklists>
+            {% for blacklist in blacklists %}
+            <li><h2>{{ blacklist.name }}</h2>
+                {% else %}
+            <li><em>No blacklists so far</em>
+                {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

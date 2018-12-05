@@ -13,6 +13,17 @@ body {
 	color: #aaa;
 }
 
+.page-header {
+    padding-bottom: 9px;
+    margin: 20px 0 30px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 700px;
+}
+
 .simple-container {
 	max-width: 675px;
 	margin: 0 auto;

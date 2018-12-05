@@ -15,7 +15,8 @@ atexit.register(lambda: scheduler.shutdown(wait=False))
 
 @app.route('/')
 def show_entries():
-    return render_template('index.html',
+    return render_template('status.html',
+                           state=scheduler.running,
                            blacklists=Subreddit.select().where(Subreddit.blacklisted == True),
                            posts=RedditPost.select(),
                            replies=CrossCommentRelationship.select().where(CrossCommentRelationship.replied == True))

@@ -108,6 +108,7 @@ class YouCompareBot(object):
                 try:
                     reply_body = self.reply_template % (100 * round(cross_comment.similarity, 4),
                                                         youtube_db_entry.permalink)
+                    print('reddit comment ID: ' + reddit_db_entry.comment_id)
                     praw.Reddit.comment(reddit_db_entry.comment_id).reply(reply_body)
                     break
 
