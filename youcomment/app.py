@@ -19,7 +19,7 @@ def show_entries():
                            state=scheduler.running,
                            blacklists=Subreddit.select().where(Subreddit.blacklisted == True),
                            posts=RedditPost.select(),
-                           replies=CrossCommentRelationship.select().where(CrossCommentRelationship.replied == True))
+                           replies=CrossCommentRelationship.select())
 
 
 if __name__ == '__main__':
