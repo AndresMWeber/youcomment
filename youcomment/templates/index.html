@@ -2,23 +2,23 @@
 {% block body %}
 <ul class=posts>
     {% for post in posts %}
-    <li><h2>{{ post.id }}</h2>{{ post.permalink }}
+    <li><h2>{{ post.post_id }}</h2>: <a href="{{ post.permalink }}">{{ post.permalink }}</a>
         {% else %}
-    <li><em>Unbelievable. No entries here so far</em>
+    <li><em>No posts have been checked so far</em>
         {% endfor %}
 </ul>
 
 <ul class=replies>
     {% for reply in replies %}
-    <li><h2>{{ reply.id }}</h2>{{ reply.permalink }}
+    <li>{{ reply.reddit_comment.permalink }}<-({{ reply.similarity }})->{{ reply.youtube_comment.permalink }} : replied= {{ reply.replied }}
         {% else %}
-    <li><em>Unbelievable. No replies here so far</em>
+    <li><em>The bot has not made any replies yet.</em>
         {% endfor %}
 </ul>
 
 <ul class=blacklists>
     {% for blacklist in blacklists %}
-    <li><h2>{{ post.name }}</h2>
+    <li><h2>{{ blacklist.name }}</h2>
         {% else %}
     <li><em>No blacklists so far</em>
         {% endfor %}

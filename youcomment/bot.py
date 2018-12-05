@@ -52,6 +52,7 @@ class YouCompareBot(object):
 
             for reddit_comment in reddit_comments:
                 r_comment, _ = RedditComment.get_or_create(comment_id=reddit_comment.id,
+                                                           permalink='http://reddit.com' + reddit_comment.permalink,
                                                            post=RedditPost.get(
                                                                RedditPost.post_id == reddit_comment.submission.id))
 
@@ -61,17 +62,26 @@ class YouCompareBot(object):
                     if similarity > self.SIMILARITY_LIMIT:
                         similar_posts.append((similarity, reddit_comment, youtube_comment))
 
-                        y_comment = YoutubeComment.create(comment_id=youtube_comment['id'],
-                                                          video=YoutubeVideo.get(
-                                                              YoutubeVideo.video_id == youtube_comment['videoId']))
+                        video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment['videoId'])
+                        comment_id = youtube_comment['id']
+
+                        y_comment = YoutubeComment.create(comment_id=comment_id,
+                                                          video=video,
+                                                          permalink=yt.YoutubeVideoBot.build_url(video.video_id,
+                                                                                                 comment_id))
 
                         CrossCommentRelationship.create(reddit_comment=r_comment,
                                                         youtube_comment=y_comment,
                                                         similarity=similarity)
+                        youlog.log.info('Post:%s, Comment:%s - Reddit(%s)<-%f->Youtube(%s).' % (
+                            post.id,
+                            reddit_comment.id,
+                            reddit_comment.body.encode('utf-8'),
+                            similarity,
+                            youtube_comment['textDisplay'].encode('utf-8')))
                         break
 
-            youlog.log.info('Processed reddit post %s.' % post.id)
-            self.make_replies()
+        self.make_replies()
         youlog.log.info('Reached end of reddit post stream...exiting.')
 
         return similar_posts
@@ -80,27 +90,32 @@ class YouCompareBot(object):
         """ The bot will attempt to make replies to the given similar youtube/reddit comments on reddit.
 
         """
-        if not self.LIVE:
-            return
+        youlog.log.info('Bot is making replies if live.  Live status: %s' % self.LIVE)
 
         try_again = True
 
-        for cross_comment in CrossCommentRelationship.get(CrossCommentRelationship.replied == False):
-            reddit_db_entry = cross_comment.reddit_post
-            youtube_db_entry = cross_comment.youtube_post
+        for cross_comment in CrossCommentRelationship.select().where(CrossCommentRelationship.replied == False):
+            reddit_db_entry = cross_comment.reddit_comment
+            youtube_db_entry = cross_comment.youtube_comment
+            youlog.log.info('Replying to comment %s because of youtube comment %s' % (reddit_db_entry.permalink,
+                                                                                      youtube_db_entry.permalink))
 
             retries = 0
+
+            if not self.LIVE:
+                break
 
             while try_again:
                 try_again = False
 
                 try:
                     reply_body = self.reply_template % (100 * round(cross_comment.similarity, 4),
-                                                        youtube_db_entry.video_url)
+                                                        youtube_db_entry.permalink)
                     praw.Reddit.comment(reddit_db_entry.id).reply(reply_body)
                     break
 
                 except praw.exceptions.APIException:
+                    youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
                     retries += 1
                     time.sleep(self.REDDIT_REPLY_INTERVAL)
                     try_again = True if retries < self.REDDIT_NUM_RETRIES else False

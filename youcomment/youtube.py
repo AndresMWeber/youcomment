@@ -83,11 +83,15 @@ class YoutubeVideoBot(BotMixin):
             comment_likes = comment[LIKE_COUNT]
 
             if comment_likes >= conf.YOUTUBE_LIKE_THRESHOLD:
-                comment[URL] = YOUTUBE_URL_TEMPLATE.format(URL=kwargs.get(VIDEO_ID), COMMENT=comment_id)
+                comment[URL] = self.build_url(kwargs.get(VIDEO_ID), comment_id)
                 top_n_comments.append(comment)
 
         top_n_comments.sort(key=lambda d: d[LIKE_COUNT], reverse=True)
         return top_n_comments[:conf.YOUTUBE_NUM_TOP_COMMENTS]
+
+    @staticmethod
+    def build_url(video_id, comment_id):
+        return YOUTUBE_URL_TEMPLATE.format(URL=video_id, COMMENT=comment_id)
 
     @staticmethod
     def parse_url(url):

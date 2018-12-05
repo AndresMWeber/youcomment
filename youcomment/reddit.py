@@ -52,11 +52,10 @@ class RedditYoutubeBot(Reddit, BotMixin):
                 if post is None or self.REDDIT_MAX_POSTS != 0 and post_count > self.REDDIT_MAX_POSTS:
                     break
                 try:
-                    RedditPost.get((RedditPost.post_id == post.id) & (not RedditPost.subreddit.blacklisted))
-
+                    RedditPost.get(RedditPost.post_id == post.id)
                 except peewee.DoesNotExist:
                     subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
-                    RedditPost.create(post_id=post.id, subreddit=subreddit)
+                    RedditPost.create(post_id=post.id, subreddit=subreddit, permalink=post.permalink)
                     processed_post = self.process_post(post)
                     if processed_post:
                         yield processed_post
@@ -65,8 +64,8 @@ class RedditYoutubeBot(Reddit, BotMixin):
             youlog.log.error('Failed Reddit log in with the account credentials, check your env vars and restart.')
             raise e
 
-    def resolve_blacklists(self):
-        self.subreddit_list = [subreddit for subreddit in self.subreddit_list if not self.subreddit(subreddit).banned]
+    def resolve_blacklists(self, subreddits):
+        return [subreddit for subreddit in subreddits if not self.subreddit(subreddit).banned]
 
     @staticmethod
     def process_post(post):

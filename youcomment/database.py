@@ -21,6 +21,7 @@ class Subreddit(peewee.Model):
 class RedditPost(peewee.Model):
     post_id = peewee.CharField(max_length=100, unique=True)
     subreddit = peewee.ForeignKeyField(Subreddit, backref='subreddit')
+    permalink = peewee.CharField(max_length=255, unique=True)
 
     class Meta:
         database = db
@@ -30,6 +31,7 @@ class RedditComment(peewee.Model):
     comment_id = peewee.CharField(max_length=100, unique=True)
     post = peewee.ForeignKeyField(RedditPost, backref='post')
     replied = peewee.BooleanField(default=False)
+    permalink = peewee.CharField(max_length=255, unique=True)
 
     class Meta:
         database = db
@@ -45,6 +47,7 @@ class YoutubeVideo(peewee.Model):
 
 class YoutubeComment(peewee.Model):
     comment_id = peewee.CharField(max_length=20, unique=True)
+    permalink = peewee.CharField(max_length=255, unique=True)
     video = peewee.ForeignKeyField(YoutubeVideo, backref='video')
 
     class Meta:
