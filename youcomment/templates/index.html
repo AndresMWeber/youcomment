@@ -1,0 +1,26 @@
+{% extends "default.html" %}
+{% block body %}
+<ul class=posts>
+    {% for post in posts %}
+    <li><h2>{{ post.id }}</h2>{{ post.permalink }}
+        {% else %}
+    <li><em>Unbelievable. No entries here so far</em>
+        {% endfor %}
+</ul>
+
+<ul class=replies>
+    {% for reply in replies %}
+    <li><h2>{{ reply.id }}</h2>{{ reply.permalink }}
+        {% else %}
+    <li><em>Unbelievable. No replies here so far</em>
+        {% endfor %}
+</ul>
+
+<ul class=blacklists>
+    {% for blacklist in blacklists %}
+    <li><h2>{{ post.name }}</h2>
+        {% else %}
+    <li><em>No blacklists so far</em>
+        {% endfor %}
+</ul>
+{% endblock %}
