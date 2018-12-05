@@ -16,63 +16,47 @@ body {
 .display-table {
     background: #333333;
     text-align: center;
-    float: "center";
-    width: 80%;
+    float: center;
+    width: 95%;
     margin-left:auto;
     margin-right:auto;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 .page-header {
     padding-bottom: 9px;
     margin: 20px 0 30px;
-    border-bottom: 1px solid #eeeeee;
 }
 
 .container-narrow {
     max-width: 700px;
-    width: 50%;
+    width: 65%;
     text-align: center;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-.body-status{
-    text-align: center;
-    margin: 0 auto;
-}
-
-.top-status {
+.status {
     width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
+    text-align: center;
+}
+
+.bot {
     border-bottom: 5px dashed #323232;
+    width: 100%;
 }
 
-.left-status {
-    width: 25%;
-    height: 100%;
-    float: left;
-    border-collapse: collapse;
-    margin: 0 auto;
+.replies {
+    width: 100%;
 }
 
-.middle-status {
-    width: 50%;
-    height: 100%;
-    float: left;
-    border-collapse: collapse;
-    margin: 0 auto;
+.posts {
+    width: 100%;
 }
 
-.right-status {
-    width: 25%;
-    height: 100%;
-    position: relative;
-    float: right;
-    border-collapse: collapse;
-    margin: 0 auto;
+.blacklist {
+    width: 100%;
 }
 
 .simple-container {
@@ -137,6 +121,10 @@ hr {
 
 .stopped {
     color: #e66000;
+}
+
+a{
+    font-size: 10px;
 }
 
 a[href] {

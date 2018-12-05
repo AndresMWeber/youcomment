@@ -1,60 +1,64 @@
 {% extends "default.html" %}
 
 {% block body %}
-<div class="body">
-    <div class="body-status">
-        <div class="top-status">
-            <div class="container-narrow">
-                <h3> Bot Run State </h3>
-                {% if {{ state }} %}
-                    <p class="running"><b> { Running } </b></p>
-                {% else %}
-                    <p class="stopped"><b> { Stopped } </b></p>
-                {% endif %}
-            </div>
+<div>
+    <div class="bot status">
+        <div class="container-narrow">
+            <h3> Bot Run State </h3>
+            {% if state %}
+                <p class="running"><b> Running </b></p>
+            {% else %}
+                <p class="stopped"><b> Stopped </b></p>
+            {% endif %}
         </div>
-        <div class="left-status">
-            <h2>Replies</h2>
-            <table class="display-table">
-                {% for reply in replies %}
-                <tr>
-                    <td>
-                        {{ reply.reddit_comment.permalink }}<-({{ reply.similarity }})->{{ reply.youtube_comment.permalink }} : replied= {{ reply.replied }}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td><em>The bot has not made any replies yet.</em></td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="middle-status">
-            <h2>Posts</h2>
-            <table class="display-table">
-                {% for post in posts %}
-                <tr>
-                    <td>
-                        <h2><a href="{{ post.permalink }}">{{ post.permalink }}</a></h2>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td><em>No posts have been checked so far.</em></td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="right-status">
+    </div>
+    <div class="replies status">
+        <h2>Replies</h2>
+        <table class="display-table">
+            {% for reply in replies %}
+            <tr>
+                <td>
+                    {{ reply.reddit_comment.permalink }}<-({{ reply.similarity }})->{{ reply.youtube_comment.permalink }} : replied= {{ reply.replied }}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td><em>The bot has not made any replies yet.</em></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="blacklist status">
+        <div class="container-narrow">
             <h2>Blacklists</h2>
             <ul class=blacklists>
                 {% for blacklist in blacklists %}
                 <li><h2>{{ blacklist.name }}</h2>
-                    {% else %}
+                {% else %}
                 <li><em>No blacklists so far</em>
-                    {% endfor %}
+                {% endfor %}
             </ul>
         </div>
+    </div>
+    <div class="posts status">
+        <h2>Checked Posts</h2>
+        <table class="display-table">
+            <tr>
+                <th><b>Subreddit</b></th>
+                <th><b>Post URL</b></th>
+            </tr>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.subreddit.name }}</td>
+                <td><a href="{{ post.permalink }}">{{ post.permalink }}</a></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>None</td>
+                <td><em>No posts have been checked so far.</em></td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 {% endblock %}

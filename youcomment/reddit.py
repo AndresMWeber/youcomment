@@ -55,7 +55,9 @@ class RedditYoutubeBot(Reddit, BotMixin):
                     RedditPost.get(RedditPost.post_id == post.id)
                 except peewee.DoesNotExist:
                     subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
-                    RedditPost.create(post_id=post.id, subreddit=subreddit, permalink=post.permalink)
+                    RedditPost.create(post_id=post.id,
+                                      subreddit=subreddit,
+                                      permalink='http://reddit.com' + post.permalink)
                     processed_post = self.process_post(post)
                     if processed_post:
                         yield processed_post
