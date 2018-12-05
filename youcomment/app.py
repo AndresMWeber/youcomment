@@ -1,8 +1,10 @@
+import os
 from flask import Flask, render_template
-from youcomment.database import RedditPost, CrossCommentRelationship, Subreddit
-import youcomment.youlog as youlog
-from youcomment.__main__ import create_scheduler
 import atexit
+
+import youcomment.youlog as youlog
+from youcomment.database import RedditPost, CrossCommentRelationship, Subreddit
+from youcomment.__main__ import create_scheduler
 
 app = Flask(__name__)
 
@@ -21,4 +23,4 @@ def show_entries():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(threaded=True, host='0.0.0.0', port=port))
+    app.run(threaded=True, host='0.0.0.0', port=port)
