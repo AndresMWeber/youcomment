@@ -57,7 +57,8 @@ class YouCompareBot(object):
                                                                RedditPost.post_id == reddit_comment.submission.id))
 
                 for youtube_comment in youtube_comments:
-                    similarity = self.similarity(youtube_comment['textDisplay'], reddit_comment.body)
+                    yt_body = youtube_comment['textDisplay']
+                    similarity = self.similarity(yt_body, reddit_comment.body)
 
                     if similarity > self.SIMILARITY_LIMIT:
                         similar_posts.append((similarity, reddit_comment, youtube_comment))
@@ -73,12 +74,8 @@ class YouCompareBot(object):
                         CrossCommentRelationship.create(reddit_comment=r_comment,
                                                         youtube_comment=y_comment,
                                                         similarity=similarity)
-                        youlog.log.info('Post:%s, Comment:%s - Reddit(%s)<-%f->Youtube(%s).' % (
-                            post.id,
-                            reddit_comment.id,
-                            reddit_comment.body.encode('utf-8'),
-                            similarity,
-                            youtube_comment['textDisplay'].encode('utf-8')))
+                        youlog.log.info(u'Post:%s, Comment:%s - Reddit(%s)<-%f->Youtube(%s).' % (
+                            post.id, reddit_comment.id, reddit_comment.body, similarity, yt_body))
                         break
 
         self.make_replies()
