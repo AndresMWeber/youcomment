@@ -15,8 +15,6 @@ from youcomment.database import (CrossCommentRelationship,
 
 
 class YouCompareBot(object):
-    reddit_bot = rd.RedditYoutubeBot()
-    youtube_bot = yt.YoutubeVideoBot()
     post_template_file = conf.POST_TEMPLATE
     reply_template = ''
 
@@ -27,6 +25,8 @@ class YouCompareBot(object):
 
     def __init__(self, subreddits=None):
         init_db()
+        self.reddit_bot = rd.RedditYoutubeBot()
+        self.youtube_bot = yt.YoutubeVideoBot()
         self.reddit_bot.subreddit_list = subreddits or self.reddit_bot.subreddit_list
 
         with open(self.post_template_file, 'r') as f:
@@ -41,6 +41,8 @@ class YouCompareBot(object):
         :param subreddits: list or str, list of subreddit names or just a name
         :return: list(tuple(float, praw.models.reddit.comment.Comment, dict)), list of (similarity, youtube video data, reddit comment)
         """
+        youlog.log.info('Initializing run of %s.' % self)
+
         subreddits = rd.RedditYoutubeBot.resolve_subreddit_list(subreddits or self.reddit_bot.subreddit_list)
         similar_posts = []
 

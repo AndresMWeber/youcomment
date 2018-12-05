@@ -4,6 +4,7 @@ import youcomment.version as version
 # Modifiable Settings
 REDDIT_AUTHOR_USERNAME = 'daemonecles'
 DEFAULT_SUBREDDITS = ["you_comment_bot"]
+DEFAULT_BOT_RUN_INTERVAL_MINS = 3
 SIMILARITY_LIMIT = 0.75
 YOUTUBE_COMMENTS_PER_PAGE = 100
 YOUTUBE_COMMENTS_MAX_NUM = 500
@@ -12,7 +13,7 @@ YOUTUBE_NUM_TOP_COMMENTS = 50
 REDDIT_MAX_POSTS = 50
 REDDIT_NUM_RETRIES = 3
 REDDIT_REPLY_INTERVAL = 600
-LOG_FILE = 'youcomment.log'
+LOG_FILE = 'youcomment'
 
 # Env Var Settings
 YC_LIVE_MODE = getenv('YC_LIVE_MODE', False)
