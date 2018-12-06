@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 import atexit
 
+from youcomment.database import db_proxy
 import youcomment.youlog as youlog
 from youcomment.database import RedditPost, CrossCommentRelationship, Subreddit
 from youcomment.__main__ import create_scheduler
@@ -20,6 +21,18 @@ def show_entries():
                            blacklists=Subreddit.select().where(Subreddit.blacklisted == True),
                            posts=RedditPost.select(),
                            replies=CrossCommentRelationship.select())
+
+
+@app.before_request
+def before_request():
+    g.db = db_proxy
+    g.db.connect()
+
+
+@app.after_request
+def after_request(response):
+    g.db.close()
+    return response
 
 
 if __name__ == '__main__':
