@@ -5,15 +5,18 @@ import youcomment.conf as conf
 db_proxy = peewee.Proxy()
 
 if 'HEROKU' in os.environ:
-    import urlparse, psycopg2
+    try:
+        from urllib.parse import urlparse, urlencode, uses_netloc
+    except ImportError:
+        from urlparse import urlparse, uses_netloc
 
-    urlparse.uses_netloc.append('postgres')
-    url = urlparse.urlparse(os.environ["DATABASE_URL"])
-    db = psycopg2.PostgresqlDatabase(database=url.path[1:],
-                                     user=url.username,
-                                     password=url.password,
-                                     host=url.hostname,
-                                     port=url.port)
+    uses_netloc.append('postgres')
+    url = urlparse(os.environ["DATABASE_URL"])
+    db = peewee.PostgresqlDatabase(database=url.path[1:],
+                                   user=url.username,
+                                   password=url.password,
+                                   host=url.hostname,
+                                   port=url.port)
     db_proxy.initialize(db)
 else:
     db = peewee.SqliteDatabase(conf.DB_PATH, pragmas={'journal_mode': 'wal',
