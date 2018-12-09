@@ -21,12 +21,13 @@
 2. [Usage](#usage)
 3. [Developing](#developing)
    *   [Python/Git set up ](#python-and-git-set-up)
+4. [Configuration](#configuration)
    *   [Set up API Access __(CRUCIAL)__](#set-up-api-access)
-4. [Meet the Bot](#meet-the-bot)
-5. [Contributing](#contributing)
-6. [File Descriptions](#file-descriptions)
-7. [Changelog](#version-history)
-8. [License](#license)
+5. [Meet the Bot](#meet-the-bot)
+6. [Contributing](#contributing)
+7. [File Descriptions](#file-descriptions)
+8. [Changelog](#version-history)
+9. [License](#license)
 
 ### Installation
 #### Python and Git set up 
@@ -47,6 +48,7 @@
 
 `pip install -r requirements.txt`
 
+### Configuration
 #### Set up API Access
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)

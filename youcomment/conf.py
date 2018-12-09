@@ -1,5 +1,6 @@
 from os import getenv, path
-import youcomment.version as version
+import platform
+from youcomment.version import __version__
 
 # Modifiable Settings
 REDDIT_AUTHOR_USERNAME = 'daemonecles'
@@ -13,14 +14,15 @@ YOUTUBE_NUM_TOP_COMMENTS = 50
 REDDIT_MAX_POSTS = 50
 REDDIT_NUM_RETRIES = 3
 REDDIT_REPLY_INTERVAL = 600
-LOG_FILE = 'youcomment'
+
+DEV_MODE = 'DEV'
+LIVE_MODE = 'LIVE'
 
 # Env Var Settings
 YC_LIVE_MODE = getenv('YC_LIVE_MODE', False)
 REDDIT_USER = getenv('YC_REDDIT_USER', 'youtube_compare_bot')
-REDDIT_AGENT = 'windows:{BOT_USER}:v{V} by /u/{USER}'.format(BOT_USER=REDDIT_USER,
-                                                             V=version.__version__,
-                                                             USER=REDDIT_AUTHOR_USERNAME)
+AGENT_KWARGS = {'PLAT': platform.system(), 'BOT': REDDIT_USER, 'V': __version__, 'USER': REDDIT_AUTHOR_USERNAME}
+REDDIT_AGENT = '{PLAT}:{BOT}:v{V} by /u/{USER}'.format(**AGENT_KWARGS)
 REDDIT_PASS = getenv('YC_REDDIT_PASS')
 REDDIT_CLIENT_ID = getenv('YC_REDDIT_CLIENT_ID')
 REDDIT_CLIENT_SECRET = getenv('YC_REDDIT_CLIENT_SECRET')
@@ -29,6 +31,10 @@ YOUTUBE_API_KEY = getenv('YC_YOUTUBE_API_KEY')
 # Dir Settings
 DATA_DIR = 'data'
 DB_NAME = 'bot_runtime.db'
+LOG_FILE = 'youcomment'
+
 __here__ = path.abspath(path.dirname(__file__))
-POST_TEMPLATE = path.join(__here__, DATA_DIR, 'template.md')
+
+TEMPLATE_PATH = path.join(__here__, DATA_DIR, 'template.md')
 DB_PATH = path.join(__here__, DATA_DIR, DB_NAME)
+LOG_PATH = path.join(__here__, "{}.{}".format(LOG_FILE, 'log'))

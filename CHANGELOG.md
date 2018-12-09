@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 *   Heroku Procfile
 ### Changed
 *   Added class properties to YouCompareBot to enable changing vars at runtime
-    -   YouCompareBot.post_template_file = conf.POST_TEMPLATE
+    -   YouCompareBot.post_template_file = conf.TEMPLATE_PATH
     -   YouCompareBot.SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
     -   YouCompareBot.REDDIT_REPLY_INTERVAL = conf.REDDIT_REPLY_INTERVAL
     -   YouCompareBot.REDDIT_NUM_RETRIES = conf.REDDIT_NUM_RETRIES
