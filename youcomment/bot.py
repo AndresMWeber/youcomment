@@ -4,6 +4,7 @@ import youcomment.youlog as youlog
 import youcomment.reddit as rd
 import youcomment.youtube as yt
 import youcomment.conf as conf
+from youcomment.youtube import VIDEO_ID, TEXT
 from youcomment.version import __version__
 from youcomment.database import (CrossCommentRelationship,
                                  YoutubeComment,
@@ -40,10 +41,10 @@ class YouCompareBot(object):
         for post in self.reddit_bot.run(subreddits or self.reddit_bot.subreddit_list):
             try:
                 youtube_comments = self.youtube_bot.run(post.url)
-                reddit_comments = self.reddit_bot.get_top_n_comments(post)
+                reddit_comments = self.reddit_bot.get_top_comments(post)
                 for reddit_comment in reddit_comments:
                     for youtube_comment in youtube_comments:
-                        similarity = self.similarity(youtube_comment['textDisplay'], reddit_comment.body)
+                        similarity = self.similarity(youtube_comment[TEXT], reddit_comment.body)
                         if similarity > self.SIMILARITY_LIMIT:
                             similar_posts.append(self.make_relationship(youtube_comment, reddit_comment, similarity))
                             break
@@ -60,7 +61,7 @@ class YouCompareBot(object):
                                                    permalink='http://reddit.com' + reddit_comment.permalink,
                                                    post=reddit_post)
 
-        y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment['videoId'])
+        y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment[VIDEO_ID])
         y_comment_id = youtube_comment['id']
 
         y_comment = YoutubeComment.create(comment_id=y_comment_id,
@@ -72,8 +73,12 @@ class YouCompareBot(object):
                                         youtube_comment=y_comment,
                                         similarity=similarity)
 
-        youlog.log.info(u'Post:%s, Comment:%s - Reddit(%s)<-%f->Youtube(%s).' % (
-            reddit_post.id, reddit_comment.id, reddit_comment.body, similarity, youtube_comment['textDisplay']))
+        msg = u'Post:{}, Comment:{} - Reddit({})<-{}->Youtube({})'.format(reddit_post.id,
+                                                                          reddit_comment.id,
+                                                                          reddit_comment.body,
+                                                                          similarity,
+                                                                          youtube_comment[TEXT])
+        youlog.log.info(msg.encode('utf-8'))
 
         return (similarity, reddit_comment, youtube_comment)
 

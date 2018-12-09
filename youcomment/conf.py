@@ -14,7 +14,6 @@ YOUTUBE_NUM_TOP_COMMENTS = 50
 REDDIT_MAX_POSTS = 50
 REDDIT_NUM_RETRIES = 3
 REDDIT_REPLY_INTERVAL = 600
-
 DEV_MODE = 'DEV'
 LIVE_MODE = 'LIVE'
 
@@ -31,10 +30,11 @@ YOUTUBE_API_KEY = getenv('YC_YOUTUBE_API_KEY')
 # Dir Settings
 DATA_DIR = 'data'
 DB_NAME = 'bot_runtime.db'
-LOG_FILE = 'youcomment'
+LOG_FILE = 'youcomment.log'
+TEMPLATE_FILE = 'template.md'
 
 __here__ = path.abspath(path.dirname(__file__))
 
-TEMPLATE_PATH = path.join(__here__, DATA_DIR, 'template.md')
+TEMPLATE_PATH = path.join(__here__, DATA_DIR, TEMPLATE_FILE)
 DB_PATH = path.join(__here__, DATA_DIR, DB_NAME)
-LOG_PATH = path.join(__here__, "{}.{}".format(LOG_FILE, 'log'))
+LOG_PATH = path.join(__here__, LOG_FILE)

@@ -70,15 +70,13 @@ class RedditBot(Reddit, BotMixin):
             raise e
 
     def comment(self, id=None, url=None):
-
         try_again = True
         retries = 0
 
         while try_again:
-            try_again = False
-
             try:
-                super(RedditBot, self).comment(self, id=id, url=url)
+                super(RedditBot, self).comment(id=id, url=url)
+                try_again = False
                 break
 
             except APIException:
@@ -86,9 +84,6 @@ class RedditBot(Reddit, BotMixin):
                 retries += 1
                 time.sleep(self.REDDIT_REPLY_INTERVAL)
                 try_again = True if retries < self.REDDIT_NUM_RETRIES else False
-
-    def resolve_blacklists(self, subreddits):
-        return [subreddit for subreddit in subreddits if not self.subreddit(subreddit).banned]
 
     @staticmethod
     def process_post(post):
@@ -100,7 +95,7 @@ class RedditBot(Reddit, BotMixin):
             youlog.log.debug('Post %s is not a YouTube url post...skipping.' % post.id)
 
     @staticmethod
-    def get_top_n_comments(post, num_comments=25):
+    def get_top_comments(post, num_comments=25):
         comments = [comment for comment in post.comments if isinstance(comment, Comment)]
         comments.sort(key=lambda comment: comment.score, reverse=True)
         return comments[:num_comments]
