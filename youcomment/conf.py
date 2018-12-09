@@ -30,5 +30,5 @@ YOUTUBE_API_KEY = getenv('YC_YOUTUBE_API_KEY')
 DATA_DIR = 'data'
 DB_NAME = 'bot_runtime.db'
 __here__ = path.abspath(path.dirname(__file__))
-POST_TEMPLATE = path.join(__here__, DATA_DIR, 'post_template.txt')
+POST_TEMPLATE = path.join(__here__, DATA_DIR, 'template.md')
 DB_PATH = path.join(__here__, DATA_DIR, DB_NAME)
