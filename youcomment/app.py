@@ -39,7 +39,7 @@ def status():
                            replies=CrossCommentRelationship.select())
 
 
-@app.route('/logstream')
+@app.route('/log_stream')
 def log_stream():
     return Response(generate(), mimetype='text/event-stream')
 
