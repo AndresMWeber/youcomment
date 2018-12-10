@@ -23,12 +23,15 @@ def generate():
                 yield line
             sleep(1)
 
+
 def stream_template(template_name, **context):
-    app.update_template_context(context)
-    t = app.jinja_env.get_template(template_name)
-    rv = t.stream(context)
-    rv.enable_buffering(5)
-    return rv
+    with app.app_context():
+        app.update_template_context(context)
+        t = app.jinja_env.get_template(template_name)
+        rv = t.stream(context)
+        rv.enable_buffering(5)
+        return rv
+
 
 @app.route('/')
 def status():

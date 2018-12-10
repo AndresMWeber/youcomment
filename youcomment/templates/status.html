@@ -5,11 +5,13 @@
     <div class="replies status">
         <h2>Replies</h2>
         <table class="display-table">
+            <tr><th>reddit comment id</th><th>similarity</th><th>youtube comment id</th><th>has bot replied?</th></tr>
             {% for reply in replies %}
             <tr>
-                <td>
-                    {{ reply.reddit_comment.permalink }}<-({{ reply.similarity }})->{{ reply.youtube_comment.permalink }} : replied= {{ reply.replied }}
-                </td>
+                <td> <a href="{{ reply.reddit_comment.permalink }}">{{ reply.reddit_comment.comment_id }}</a></td>
+                <td> {{ reply.similarity }} </td>
+                <td> <a href="{{ reply.youtube_comment.permalink }}">{{ reply.youtube_comment.comment_id }}</a></td>
+                <td> {{ reply.replied }} </td>
             </tr>
             {% else %}
             <tr>

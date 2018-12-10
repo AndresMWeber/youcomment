@@ -55,7 +55,7 @@ class RedditComment(peewee.Model):
 
 
 class YoutubeVideo(peewee.Model):
-    video_id = peewee.CharField(max_length=20, unique=True)
+    video_id = peewee.CharField(max_length=255, unique=True)
     video_url = peewee.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -63,7 +63,7 @@ class YoutubeVideo(peewee.Model):
 
 
 class YoutubeComment(peewee.Model):
-    comment_id = peewee.CharField(max_length=20, unique=True)
+    comment_id = peewee.CharField(max_length=255, unique=True)
     permalink = peewee.CharField(max_length=255, unique=True)
     video = peewee.ForeignKeyField(YoutubeVideo, backref='video')
 

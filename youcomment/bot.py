@@ -92,7 +92,7 @@ class YouCompareBot(object):
                                                                                       youtube_db_entry.permalink))
 
             if self.MODE == conf.LIVE_MODE:
-                reply_body = self.reply_template.format(SIM=100 * round(cross_comment.similarity, 4),
+                reply_body = self.reply_template.format(SIM=round(100 * cross_comment.similarity, 3),
                                                         URL=youtube_db_entry.permalink,
                                                         V=__version__)
                 self.reddit_bot.comment(reddit_db_entry.comment_id).reply(reply_body)

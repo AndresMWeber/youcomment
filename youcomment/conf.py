@@ -37,4 +37,4 @@ __here__ = path.abspath(path.dirname(__file__))
 
 TEMPLATE_PATH = path.join(__here__, DATA_DIR, TEMPLATE_FILE)
 DB_PATH = path.join(__here__, DATA_DIR, DB_NAME)
-LOG_PATH = path.join(__here__, LOG_FILE)
+LOG_PATH = path.join(__here__, DATA_DIR, LOG_FILE)
