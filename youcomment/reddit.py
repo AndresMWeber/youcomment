@@ -75,16 +75,15 @@ class RedditBot(Reddit, BotMixin):
 
         while try_again:
             try:
-                super(RedditBot, self).comment(id=id, url=url)
-                try_again = False
-                break
+                return super(RedditBot, self).comment(id=id, url=url)
 
             except APIException:
                 youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
                 retries += 1
                 time.sleep(self.REDDIT_REPLY_INTERVAL)
                 try_again = True if retries < self.REDDIT_NUM_RETRIES else False
-
+        return None
+    
     @staticmethod
     def process_post(post):
         try:
