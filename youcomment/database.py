@@ -5,16 +5,15 @@ import youcomment.conf as conf
 
 def load_db():
     db_proxy = peewee.Proxy()
-    default_pragmas = {'journal_mode': 'wal', 'foreign_keys': 1, 'ignore_check_constraints': 0}
-
     if 'HEROKU' in os.environ:
         from six.moves.urllib.parse import urlparse, uses_netloc
         uses_netloc.append('postgres')
         url = urlparse(os.environ["DATABASE_URL"])
         db_kwargs = {'database': url.path[1:], 'user': url.username, 'password': url.password,
-                     'host': url.hostname, 'port': url.port, 'pragmas': default_pragmas}
+                     'host': url.hostname, 'port': url.port}
         db = peewee.PostgresqlDatabase(**db_kwargs)
     else:
+        default_pragmas = {'journal_mode': 'wal', 'foreign_keys': 1, 'ignore_check_constraints': 0}
         db = peewee.SqliteDatabase(conf.DB_PATH, pragmas=default_pragmas)
 
     db_proxy.initialize(db)
