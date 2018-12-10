@@ -10,7 +10,7 @@ class TestBot(BaseTest):
         bot = YouCompareBot(subreddits=TEST_SUBREDDIT)
         bot.run()
         self.assertEqual(
-            [c.similarity for c in CrossCommentRelationship.select().where(CrossCommentRelationship.replied == False)],
+            [c.similarity for c in CrossCommentRelationship.select()],
             [0.7668393782383419, 1.0, 0.993006993006993, 0.8809523809523809])
         self.assertEqual(len(RedditPost.select()),
                          len(list(bot.reddit_bot.subreddit('+'.join([TEST_SUBREDDIT])).top(limit=None))))
