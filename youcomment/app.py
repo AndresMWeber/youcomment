@@ -1,8 +1,10 @@
 import os
-from flask import Flask, render_template, g
+from time import sleep
+from flask import Flask, render_template, g, Response, stream_with_context
 import atexit
 
 from youcomment.database import db_proxy
+import youcomment.conf as conf
 import youcomment.youlog as youlog
 from youcomment.database import RedditPost, CrossCommentRelationship, Subreddit
 from youcomment.__main__ import create_scheduler
@@ -14,13 +16,37 @@ scheduler = create_scheduler()
 atexit.register(lambda: scheduler.shutdown(wait=False))
 
 
+def generate():
+    with open(conf.LOG_PATH, 'r') as f:
+        while True:
+            for line in f.readlines():
+                yield line
+            sleep(1)
+
+def stream_template(template_name, **context):
+    app.update_template_context(context)
+    t = app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    rv.enable_buffering(5)
+    return rv
+
 @app.route('/')
-def show_entries():
+def status():
     return render_template('status.html',
                            state=scheduler.running,
                            blacklists=Subreddit.select().where(Subreddit.blacklisted == True),
                            posts=RedditPost.select(),
                            replies=CrossCommentRelationship.select())
+
+
+@app.route('/logstream')
+def log_stream():
+    return Response(generate(), mimetype='text/event-stream')
+
+
+@app.route('/log')
+def log():
+    return Response(stream_template('log.html', state=scheduler.running, log=stream_with_context(generate())))
 
 
 @app.before_request

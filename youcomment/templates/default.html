@@ -4,8 +4,6 @@
     <title>YouCommentBot</title>
     <meta name="description" content="Reddit Youtube Bot Status Page">
     <meta name="author" content="Andres Weber">
-
-    <!-- Enable responsive viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -24,8 +22,22 @@
             <small>A Reddit bot for comparing top-level youtube comments and reddit comments.</small>
         </div>
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+        <div class="bot status">
+            <div class="container-narrow">
+                <h3> Bot Run State </h3>
+                {% if state %}
+                    <p class="running"><b> Running </b></p>
+                {% else %}
+                    <p class="stopped"><b> Stopped </b></p>
+                {% endif %}
+            </div>
+        </div>
         <div class="page">
             {% block body %}{% endblock %}
         </div>
     </div>
+    <p><a href="{{ url_for('status') }}">Status</a></p>
+    <p><a href="{{ url_for('log') }}">Log Output</a></p>
+    <p><a href="{{ url_for('logstream') }}">Raw Log</a></p>
 </div>
