@@ -80,6 +80,13 @@ class CrossCommentRelationship(peewee.Model):
     class Meta:
         database = db
 
+    def __repr__(self):
+        return '{}(reddit: {}, youtube: {}, similarity: {}, replied: {}'.format(self.__class__.__name__,
+                                                                                self.reddit_comment.comment_id,
+                                                                                self.youtube_comment.comment_id,
+                                                                                self.similarity,
+                                                                                self.replied)
+
 
 models = [Subreddit, RedditPost, RedditComment, YoutubeVideo, YoutubeComment, CrossCommentRelationship]
 
