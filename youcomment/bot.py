@@ -68,10 +68,11 @@ class YouCompareBot(object):
                                           video=y_video,
                                           permalink=yt.YoutubeVideoBot.build_url(y_video.video_id,
                                                                                  y_comment_id))
-
+        has_replied = any([reply for reply in r_comment.replies if reply.author.name == self.reddit_bot.user.me()])
         CrossCommentRelationship.create(reddit_comment=r_comment,
                                         youtube_comment=y_comment,
-                                        similarity=similarity)
+                                        similarity=similarity,
+                                        replied=has_replied)
 
         msg = u'Post:{}, Comment:{} - Reddit({})<-{}->Youtube({})'.format(reddit_post.id,
                                                                           reddit_comment.id,
@@ -96,6 +97,8 @@ class YouCompareBot(object):
                                                         URL=youtube_db_entry.permalink,
                                                         V=__version__)
                 self.reddit_bot.comment(reddit_db_entry.comment_id).reply(reply_body)
+                cross_comment.replied = True
+                cross_comment.save()
 
     @staticmethod
     def similarity(str1, str2):
