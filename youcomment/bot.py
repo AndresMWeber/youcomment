@@ -17,7 +17,7 @@ from youcomment.database import (CrossCommentRelationship,
 class YouCompareBot(object):
     with open(conf.TEMPLATE_PATH, 'r') as f:
         reply_template = f.read()
-    MODE = conf.LIVE_MODE  if conf.YC_LIVE_MODE else conf.DEV_MODE
+    MODE = conf.LIVE_MODE if conf.YC_LIVE_MODE else conf.DEV_MODE
     SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
 
     def __init__(self, subreddits=None):
@@ -58,8 +58,8 @@ class YouCompareBot(object):
     def make_relationship(self, youtube_comment, reddit_comment, similarity):
         reddit_post = RedditPost.get(RedditPost.post_id == reddit_comment.submission.id)
         r_db_comment, _ = RedditComment.get_or_create(comment_id=reddit_comment.id,
-                                                   permalink='http://reddit.com' + reddit_comment.permalink,
-                                                   post=reddit_post)
+                                                      permalink='http://reddit.com' + reddit_comment.permalink,
+                                                      post=reddit_post)
 
         y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment[VIDEO_ID])
         y_comment_id = youtube_comment[ID]
@@ -95,7 +95,7 @@ class YouCompareBot(object):
                 reply_body = self.reply_template.format(SIM=round(100 * cross_comment.similarity, 3),
                                                         URL=youtube_db_entry.permalink,
                                                         V=__version__)
-                self.reddit_bot.comment(reddit_db_entry.comment_id).reply(reply_body)
+                self.reddit_bot.bot_reply(reddit_db_entry.comment_id, reply_body)
                 cross_comment.replied = True
                 cross_comment.save()
                 youlog.log.info('Successfully made reply.')
