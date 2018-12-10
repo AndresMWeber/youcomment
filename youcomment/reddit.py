@@ -69,21 +69,22 @@ class RedditBot(Reddit, BotMixin):
             youlog.log.error('Failed Reddit log in with the account credentials, check your env vars and restart.')
             raise e
 
-    def comment(self, id=None, url=None):
+    def reply(self, body):
+        reply = None
         try_again = True
         retries = 0
 
         while try_again:
             try:
-                return super(RedditBot, self).comment(id=id, url=url)
-
+                reply = super(RedditBot, self).reply(body)
+                youlog.log.info('Reply successful: %s' % reply)
             except APIException:
                 youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
                 retries += 1
                 time.sleep(self.REDDIT_REPLY_INTERVAL)
                 try_again = True if retries < self.REDDIT_NUM_RETRIES else False
-        return None
-    
+        return reply or {}
+
     @staticmethod
     def process_post(post):
         try:
