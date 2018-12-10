@@ -17,7 +17,7 @@ from youcomment.database import (CrossCommentRelationship,
 class YouCompareBot(object):
     with open(conf.TEMPLATE_PATH, 'r') as f:
         reply_template = f.read()
-    MODE = conf.LIVE_MODE  # if conf.YC_LIVE_MODE else conf.DEV_MODE
+    MODE = conf.LIVE_MODE  if conf.YC_LIVE_MODE else conf.DEV_MODE
     SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
 
     def __init__(self, subreddits=None):
