@@ -57,7 +57,7 @@ class YouCompareBot(object):
 
     def make_relationship(self, youtube_comment, reddit_comment, similarity):
         reddit_post = RedditPost.get(RedditPost.post_id == reddit_comment.submission.id)
-        r_comment, _ = RedditComment.get_or_create(comment_id=reddit_comment.id,
+        r_db_comment, _ = RedditComment.get_or_create(comment_id=reddit_comment.id,
                                                    permalink='http://reddit.com' + reddit_comment.permalink,
                                                    post=reddit_post)
 
@@ -68,8 +68,8 @@ class YouCompareBot(object):
                                           video=y_video,
                                           permalink=yt.YoutubeVideoBot.build_url(y_video.video_id,
                                                                                  y_comment_id))
-        has_replied = any([reply for reply in r_comment.replies if reply.author.name == self.reddit_bot.user.me()])
-        CrossCommentRelationship.create(reddit_comment=r_comment,
+        has_replied = any([reply for reply in reddit_comment.replies if reply.author.name == self.reddit_bot.user.me()])
+        CrossCommentRelationship.create(reddit_comment=r_db_comment,
                                         youtube_comment=y_comment,
                                         similarity=similarity,
                                         replied=has_replied)
