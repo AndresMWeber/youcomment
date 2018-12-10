@@ -19,6 +19,7 @@ class RedditBot(Reddit, BotMixin):
                             'YC_REDDIT_CLIENT_SECRET': conf.REDDIT_CLIENT_SECRET}
     REDDIT_REPLY_INTERVAL = conf.REDDIT_REPLY_INTERVAL
     REDDIT_NUM_RETRIES = conf.REDDIT_NUM_RETRIES
+    REDDIT_COMMENTS_MAX_NUM = conf.REDDIT_COMMENTS_MAX_NUM
 
     @ensure_instance_env_var_dependencies
     def __init__(self, subreddits=None):
@@ -69,20 +70,24 @@ class RedditBot(Reddit, BotMixin):
             youlog.log.error('Failed Reddit log in with the account credentials, check your env vars and restart.')
             raise e
 
-    def reply(self, body):
+    def bot_reply(self, comment_id, body):
         reply = None
         try_again = True
         retries = 0
 
+        comment = self.comment(comment_id)
+        youlog.log.info('Found comment from id %s...attempting to reply...' % comment.id)
+
         while try_again:
             try:
-                reply = super(RedditBot, self).reply(body)
+                reply = comment.reply(body)
                 youlog.log.info('Reply successful: %s' % reply)
             except APIException:
                 youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
                 retries += 1
                 time.sleep(self.REDDIT_REPLY_INTERVAL)
                 try_again = True if retries < self.REDDIT_NUM_RETRIES else False
+
         return reply or {}
 
     @staticmethod
@@ -94,11 +99,10 @@ class RedditBot(Reddit, BotMixin):
         except IOError:
             youlog.log.debug('Post %s is not a YouTube url post...skipping.' % post.id)
 
-    @staticmethod
-    def get_top_comments(post, num_comments=25):
+    def get_top_comments(self, post):
         comments = [comment for comment in post.comments if isinstance(comment, Comment)]
         comments.sort(key=lambda comment: comment.score, reverse=True)
-        return comments[:num_comments]
+        return comments[:self.REDDIT_COMMENTS_MAX_NUM]
 
     @staticmethod
     def resolve_subreddit_list(subreddit_list):

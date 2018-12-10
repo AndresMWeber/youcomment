@@ -4,7 +4,7 @@ import youcomment.youlog as youlog
 import youcomment.reddit as rd
 import youcomment.youtube as yt
 import youcomment.conf as conf
-from youcomment.youtube import VIDEO_ID, TEXT
+from youcomment.youtube import VIDEO_ID, TEXT, ID
 from youcomment.version import __version__
 from youcomment.database import (CrossCommentRelationship,
                                  YoutubeComment,
@@ -17,7 +17,7 @@ from youcomment.database import (CrossCommentRelationship,
 class YouCompareBot(object):
     with open(conf.TEMPLATE_PATH, 'r') as f:
         reply_template = f.read()
-    MODE = conf.LIVE_MODE if conf.YC_LIVE_MODE else conf.DEV_MODE
+    MODE = conf.LIVE_MODE  # if conf.YC_LIVE_MODE else conf.DEV_MODE
     SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
 
     def __init__(self, subreddits=None):
@@ -46,13 +46,13 @@ class YouCompareBot(object):
                     for youtube_comment in youtube_comments:
                         similarity = self.similarity(youtube_comment[TEXT], reddit_comment.body)
                         if similarity > self.SIMILARITY_LIMIT:
-                            similar_posts.append(self.make_relationship(youtube_comment, reddit_comment, similarity))
+                            self.make_relationship(youtube_comment, reddit_comment, similarity)
                             break
             except IOError:
                 youlog.log.warning('Post %s was not detected to have a YouTube Link...skipping' % post.id)
 
         self.make_replies()
-        youlog.log.info('Reached end of reddit post stream, found %d similar posts...exiting.' % len(similar_posts))
+        youlog.log.info('Reached end of reddit post stream...exiting.')
         return similar_posts
 
     def make_relationship(self, youtube_comment, reddit_comment, similarity):
@@ -62,7 +62,7 @@ class YouCompareBot(object):
                                                    post=reddit_post)
 
         y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment[VIDEO_ID])
-        y_comment_id = youtube_comment['id']
+        y_comment_id = youtube_comment[ID]
 
         y_comment = YoutubeComment.create(comment_id=y_comment_id,
                                           video=y_video,
@@ -74,14 +74,13 @@ class YouCompareBot(object):
                                         similarity=similarity,
                                         replied=has_replied)
 
-        msg = u'Post:{}, Comment:{} - Reddit({})<-{}->Youtube({})'.format(reddit_post.id,
-                                                                          reddit_comment.id,
-                                                                          reddit_comment.body,
-                                                                          similarity,
-                                                                          youtube_comment[TEXT])
+        msg = u'Post:{}, Replied:{}, Comment:{} - Reddit({})<-{}->Youtube({})'.format(reddit_post.id,
+                                                                                      has_replied,
+                                                                                      reddit_comment.id,
+                                                                                      reddit_comment.body,
+                                                                                      similarity,
+                                                                                      youtube_comment[TEXT])
         youlog.log.info(msg.encode('utf-8'))
-
-        return (similarity, reddit_comment, youtube_comment)
 
     def make_replies(self):
         youlog.log.info('Bot status: %s, %s making replies.' % (self.MODE, 'not' if self.MODE == conf.DEV_MODE else ''))
@@ -99,6 +98,7 @@ class YouCompareBot(object):
                 self.reddit_bot.comment(reddit_db_entry.comment_id).reply(reply_body)
                 cross_comment.replied = True
                 cross_comment.save()
+                youlog.log.info('Successfully made reply.')
 
     @staticmethod
     def similarity(str1, str2):
