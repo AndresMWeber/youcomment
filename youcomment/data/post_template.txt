@@ -1,1 +1,0 @@
-Your post has been detected as %f similar to the youtube comment: %s

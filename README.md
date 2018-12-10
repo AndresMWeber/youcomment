@@ -1,22 +1,34 @@
-## [YouComment](http://www.reddit.com/u/youtube_comment_bot)
-[![CircleCI](https://circleci.com/gh/AndresMWeber/youcomment.svg?style=svg)](https://circleci.com/gh/AndresMWeber/youcomment)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bbac98237544bc49d40ea95ee5e8ffc)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
-[![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg)](https://www.python.org/)
-[![Heroku App Status](http://heroku-shields.herokuapp.com/youcomment)](https://youcomment.herokuapp.com)
+<h1 align="center">
+  <a href="http://www.reddit.com/u/youtube_comment_bot">YouComment</a>
+</h1>
+<h3 align="center">
+    A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
+</h3>
 
-A bot for comparing top-level youtube comments and reddit comments for a reddit post that centers around a youtube link.
+[![CircleCI](https://img.shields.io/circleci/project/github/AndresMWeber/youcomment.svg?style=flat-square)](https://circleci.com/gh/AndresMWeber/youcomment)
+[![Codacy Badge Coverage](https://img.shields.io/codacy/coverage/1bbac98237544bc49d40ea95ee5e8ffc.svg?style=flat-square)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge Grade](https://img.shields.io/codacy/grade/1bbac98237544bc49d40ea95ee5e8ffc.svg?style=flat-square)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
+[![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg?style=flat-square)](https://www.python.org/)
+[![Heroku App Status](https://heroku-badge.herokuapp.com/?app=youcomment&style=flat)](https://youcomment.herokuapp.com)
+
+[![Github Latest Release](https://flat.badgen.net/github/release/andresmweber/youcomment)](https://github.com/AndresMWeber/youcomment/releases)
+[![Github Last Commit](https://flat.badgen.net/github/last-commit/andresmweber/youcomment)](https://github.com/AndresMWeber/youcomment/commits/master)
+[![Github Issues](https://flat.badgen.net/github/open-issues/andresmweber/youcomment)](https://github.com/andresmweber/youcomment/issues)
+[![Github License](https://flat.badgen.net/github/license/andresmweber/youcomment)](https://github.com/AndresMWeber/youcomment/blob/master/LICENSE.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 # Table of Contents
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Developing](#developing)
    *   [Python/Git set up ](#python-and-git-set-up)
+4. [Configuration](#configuration)
    *   [Set up API Access __(CRUCIAL)__](#set-up-api-access)
-4. [Meet the Bot](#meet-the-bot)
-5. [Contributing](#contributing)
-6. [File Descriptions](#file-descriptions)
-7. [Changelog](#version-history)
-8. [License](#license)
+5. [Meet the Bot](#meet-the-bot)
+6. [Contributing](#contributing)
+7. [File Descriptions](#file-descriptions)
+8. [Changelog](#version-history)
+9. [License](#license)
 
 ### Installation
 #### Python and Git set up 
@@ -37,6 +49,7 @@ A bot for comparing top-level youtube comments and reddit comments for a reddit 
 
 `pip install -r requirements.txt`
 
+### Configuration
 #### Set up API Access
 *   Create a [Reddit App](http://reddit.com/prefs/apps) as script
 *   Obtain a [Youtube API Key](https://console.developers.google.com/apis/credentials): [(tutorial)](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
@@ -107,7 +120,7 @@ Feel free to make a new post if you want to test the bot
 | `youcomment/database.py`            | The database manager file                                    |
 | `youcomment/config.py`              | The configuration file                                       |
 | `youcomment/version.py`             | Contains only the project version number                     |
-| `youcomment/data/post_template.txt` | The message template                                         |
+| `youcomment/data/template.md` | The message template                                         |
 | `tests/`                            | Tests                                                        |
 | `.circleci/config.yml`              | CircleCI configuration file                                  |
 

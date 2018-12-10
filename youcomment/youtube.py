@@ -18,6 +18,7 @@ ID = 'id'
 URL = 'url'
 ITEMS = 'items'
 VIDEO_ID = 'videoId'
+TEXT = 'textDisplay'
 NEXT_PAGE_TOKEN = 'nextPageToken'
 PAGE_TOKEN = 'pageToken'
 POSTS_PER_PAGE = 20
@@ -47,7 +48,7 @@ class YoutubeVideoBot(BotMixin):
     def run(self, url=None):
         self.url = url or self.url
         video_id = self.parse_url(self.url)
-        top_comments = self.top_comments(videoId=video_id)
+        top_comments = self.get_top_comments(videoId=video_id)
         YoutubeVideo.get_or_create(video_id=video_id, video_url=self.url)
         return top_comments
 
@@ -68,7 +69,7 @@ class YoutubeVideoBot(BotMixin):
 
         return comments
 
-    def top_comments(self, **kwargs):
+    def get_top_comments(self, **kwargs):
         """ Obtains the top comments (up to conf.YOUTUBE_NUM_TOP_COMMENTS) and stores them in a list
 
         :return: list(dict), list of YouTube API json data for each comment

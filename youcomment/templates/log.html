@@ -1,0 +1,20 @@
+{% extends "default.html" %}
+
+{% block body %}
+<div>
+    <div>
+        <div>
+            <h2>Log</h2>
+        </div>
+        <div class="logDiv">
+            <ul class="logList">
+                {% for line in log %}
+                <li class="logLine"><p>{{ line }}</p></li>
+                {% else %}
+                <li><em>Log file has no contents.</em>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
