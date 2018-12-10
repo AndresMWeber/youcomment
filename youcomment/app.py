@@ -15,8 +15,8 @@ youlog.log.info('Running YouComment as Web Server.')
 scheduler = create_scheduler()
 atexit.register(lambda: scheduler.shutdown(wait=False))
 
-
-def generate():
+@stream_with_context
+def generate_log():
     with open(conf.LOG_PATH, 'r') as f:
         while True:
             for line in f.readlines():
@@ -25,12 +25,11 @@ def generate():
 
 
 def stream_template(template_name, **context):
-    with app.app_context():
-        app.update_template_context(context)
-        t = app.jinja_env.get_template(template_name)
-        rv = t.stream(context)
-        rv.enable_buffering(5)
-        return rv
+    app.update_template_context(context)
+    t = app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    rv.enable_buffering(5)
+    return rv
 
 
 @app.route('/')
@@ -44,12 +43,12 @@ def status():
 
 @app.route('/log_stream')
 def log_stream():
-    return Response(generate(), mimetype='text/event-stream')
+    return Response(generate_log(), mimetype='text/event-stream')
 
 
 @app.route('/log')
 def log():
-    return Response(stream_template('log.html', state=scheduler.running, log=stream_with_context(generate())))
+    return Response(stream_template('log.html', state=scheduler.running, log=generate_log()))
 
 
 @app.before_request
