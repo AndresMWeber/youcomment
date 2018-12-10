@@ -81,11 +81,11 @@ class CrossCommentRelationship(peewee.Model):
         database = db
 
     def __repr__(self):
-        return u'{}(reddit: {}, youtube: {}, similarity: {}, replied: {}'.format(self.__class__.__name__,
-                                                                                self.reddit_comment.comment_id,
-                                                                                self.youtube_comment.comment_id,
-                                                                                self.similarity,
-                                                                                self.replied).encode('utf-8')
+        return str(u'{}(reddit: {}, youtube: {}, similarity: {}, replied: {}'.format(self.__class__.__name__,
+                                                                                     self.reddit_comment.comment_id,
+                                                                                     self.youtube_comment.comment_id,
+                                                                                     self.similarity,
+                                                                                     self.replied).encode('utf-8'))
 
 
 models = [Subreddit, RedditPost, RedditComment, YoutubeVideo, YoutubeComment, CrossCommentRelationship]

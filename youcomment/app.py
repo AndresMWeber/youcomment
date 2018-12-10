@@ -15,6 +15,7 @@ youlog.log.info('Running YouComment as Web Server.')
 scheduler = create_scheduler()
 atexit.register(lambda: scheduler.shutdown(wait=False))
 
+
 @stream_with_context
 def generate_log():
     with open(conf.LOG_PATH, 'r') as f:
