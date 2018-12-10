@@ -9,8 +9,8 @@ class TestBot(BaseTest):
     def test_default_run(self):
         bot = YouCompareBot(subreddits=TEST_SUBREDDIT)
         bot.run()
-        self.assertEqual(sorted([c.similarity for c in CrossCommentRelationship.select()]),
-                         sorted([0.7668393782383419, 1.0, 0.993006993006993, 0.8809523809523809]))
+        self.assertEqual(sorted([round(n, 1) for n in [c.similarity for c in CrossCommentRelationship.select()]]),
+                         sorted([round(n, 1) for n in [0.7668, 1.0, 0.993, 0.880952]]))
         self.assertEqual(len(RedditPost.select()),
                          len(list(bot.reddit_bot.subreddit('+'.join([TEST_SUBREDDIT])).top(limit=None))))
 
