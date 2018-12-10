@@ -20,7 +20,7 @@ class TestBot(BaseTest):
         bot.reddit_bot.REDDIT_MAX_POSTS = 0
         bot.run()
         self.assertEqual(
-            len(CrossCommentRelationship.select().where(CrossCommentRelationship.replied == False)),
+            len(CrossCommentRelationship.select()),
             4)
         self.assertEqual(len(RedditPost.select()),
                          len(list(bot.reddit_bot.subreddit('+'.join([TEST_SUBREDDIT])).top(limit=None))))
@@ -30,6 +30,6 @@ class TestBot(BaseTest):
         bot.reddit_bot.REDDIT_MAX_POSTS = 1
         bot.run()
         self.assertEqual(
-            len(CrossCommentRelationship.select().where(CrossCommentRelationship.replied == False)),
+            len(CrossCommentRelationship.select()),
             0)
         self.assertEqual(len(RedditPost.select()), 1)
