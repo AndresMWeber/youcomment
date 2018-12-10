@@ -66,21 +66,16 @@ class YouCompareBot(object):
 
         y_comment = YoutubeComment.create(comment_id=y_comment_id,
                                           video=y_video,
-                                          permalink=yt.YoutubeVideoBot.build_url(y_video.video_id,
-                                                                                 y_comment_id))
-        has_replied = any([reply for reply in reddit_comment.replies if reply.author.name == self.reddit_bot.user.me()])
-        CrossCommentRelationship.create(reddit_comment=r_db_comment,
-                                        youtube_comment=y_comment,
-                                        similarity=similarity,
-                                        replied=has_replied)
+                                          permalink=yt.YoutubeVideoBot.build_url(y_video.video_id, y_comment_id))
 
-        msg = u'Post:{}, Replied:{}, Comment:{} - Reddit({})<-{}->Youtube({})'.format(reddit_post.id,
-                                                                                      has_replied,
-                                                                                      reddit_comment.id,
-                                                                                      reddit_comment.body,
-                                                                                      similarity,
-                                                                                      youtube_comment[TEXT])
-        youlog.log.info(msg.encode('utf-8'))
+        has_replied = any([reply for reply in reddit_comment.replies if reply.author.name == self.reddit_bot.user.me()])
+        cc_relationship, _ = CrossCommentRelationship.get_or_create(reddit_comment=r_db_comment,
+                                                                    youtube_comment=y_comment,
+                                                                    similarity=similarity)
+        cc_relationship.replied = has_replied
+        cc_relationship.save()
+
+        youlog.log.info(u'Post:{}, {}'.format(reddit_post.id, repr(cc_relationship)))
 
     def make_replies(self):
         youlog.log.info('Bot status: %s, %s making replies.' % (self.MODE, 'not' if self.MODE == conf.DEV_MODE else ''))
