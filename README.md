@@ -10,6 +10,7 @@
 [![Codacy Badge Grade](https://img.shields.io/codacy/grade/1bbac98237544bc49d40ea95ee5e8ffc.svg?style=flat-square)](https://www.codacy.com/app/AndresMWeber/youcomment?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AndresMWeber/youcomment&amp;utm_campaign=Badge_Grade)
 [![Python Version](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6-blue.svg?style=flat-square)](https://www.python.org/)
 [![Heroku App Status](https://heroku-badge.herokuapp.com/?app=youcomment&style=flat)](https://youcomment.herokuapp.com)
+
 [![Github Latest Release](https://flat.badgen.net/github/release/andresmweber/youcomment)](https://github.com/AndresMWeber/youcomment/releases)
 [![Github Last Commit](https://flat.badgen.net/github/last-commit/andresmweber/youcomment)](https://github.com/AndresMWeber/youcomment/commits/master)
 [![Github Issues](https://flat.badgen.net/github/open-issues/andresmweber/youcomment)](https://github.com/andresmweber/youcomment/issues)
