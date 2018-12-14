@@ -32,72 +32,83 @@ class RedditBot(Reddit, BotMixin):
                                         username=conf.REDDIT_USER,
                                         password=conf.REDDIT_PASS,
                                         user_agent=conf.REDDIT_AGENT)
-        self.subreddit_list = self.resolve_subreddit_list(subreddits)
+        self._subreddits = []
+        self.subreddit_list = subreddits
         youlog.log.info('Initializing Reddit Bot with subreddits: %s' % self.subreddit_list)
+
+    @property
+    def subreddit_list(self):
+        return self._subreddits
+
+    @subreddit_list.setter
+    def subreddit_list(self, subreddits):
+        self._subreddits = self.resolve_subreddit_list(subreddits)
+
+    @property
+    def multireddit_str(self):
+        return '+'.join(self.subreddit_list)
+
+    def stream(self):
+        return self.subreddit(self.multireddit_str).stream.submissions(pause_after=2)
 
     def run(self, subreddits=None):
         """ Obtains up to self.REDDIT_MAX_POSTS number of posts from the subreddit_list stream.
-            Set self.REDDIT_MAX_POSTS to 0 to run indefinitely.
+            Set self.REDDIT_MAX_POSTS to 0 to run indefinitely.  Always detects bans at the start of the run.
 
         :param subreddit_list: list or str, list of subreddit names or just a name
         :return: iter(praw.models.reddit.submission.Submission), generator list of submissions
         """
         post_count = 0
-        self.subreddit_list = self.resolve_subreddit_list(subreddits)
-        multi_reddit_string = '+'.join(self.subreddit_list)
-        youlog.log.info('Scanning multi-reddit: %s' % multi_reddit_string)
+        self.store_blacklists()
+        self.subreddit_list = subreddits
 
         try:
-            for post in self.subreddit(multi_reddit_string).stream.submissions(pause_after=2):
+            youlog.log.info('Scanning multi-reddit: %s' % self.multireddit_str)
+            for post in self.stream():
                 post_count += 1
 
                 if post is None or self.REDDIT_MAX_POSTS != 0 and post_count > self.REDDIT_MAX_POSTS:
                     break
 
                 youlog.log.info('Checking reddit post %s.' % post.id)
-                try:
-                    RedditPost.get(RedditPost.post_id == post.id)
-                except peewee.DoesNotExist:
-                    subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
-                    RedditPost.create(post_id=post.id,
-                                      subreddit=subreddit,
-                                      permalink='http://reddit.com' + post.permalink)
-                    processed_post = self.process_post(post)
-                    if processed_post:
-                        yield processed_post
+
+                self.store_post(post)
+                if self.post_has_youtube_link(post):
+                    yield post
 
         except OAuthException as e:
             youlog.log.error('Failed Reddit log in with the account credentials, check your env vars and restart.')
             raise e
 
-    def bot_reply(self, comment_id, body):
-        reply = None
-        try_again = True
-        retries = 0
+    def store_post(self, post):
+        """ Stores the post and returns True/False depending on if we created a new DB entry.
 
-        comment = self.comment(comment_id)
-        youlog.log.info('Found comment from id %s...attempting to reply...' % comment.id)
+        :param post: praw.models.Submission, Reddit Post to store in the DB.
+        :return: bool, True if new entry was created, False if already exists in the DB.
+        """
+        try:
+            RedditPost.get(RedditPost.post_id == post.id)
+            return False
+        except peewee.DoesNotExist:
+            subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
+            RedditPost.create(post_id=post.id, subreddit=subreddit)
+            return True
 
-        while try_again:
-            try:
-                reply = comment.reply(body)
-                youlog.log.info('Reply successful: %s' % reply)
-            except APIException:
-                youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
-                retries += 1
-                time.sleep(self.REDDIT_REPLY_INTERVAL)
-                try_again = True if retries < self.REDDIT_NUM_RETRIES else False
+    def store_blacklists(self):
+        for subreddit in self.get_blacklists():
+            subreddit, _ = Subreddit.get_or_create(name=subreddit)
+            subreddit.blacklisted = True
+            subreddit.save()
 
-        return reply or {}
+    def get_blacklists(self):
+        return [subreddit for subreddit in self.subreddit_list if not self.subreddit(subreddit).user_is_banned]
 
     @staticmethod
-    def process_post(post):
+    def post_has_youtube_link(post):
         try:
-            yt.YoutubeVideoBot.parse_url(post.url)
-            youlog.log.debug('Post %s is YouTube url post...processing.' % post.id)
-            return post
+            return bool(yt.YoutubeVideoBot.parse_url(post.url))
         except IOError:
-            youlog.log.debug('Post %s is not a YouTube url post...skipping.' % post.id)
+            return False
 
     def get_top_comments(self, post):
         comments = [comment for comment in post.comments if isinstance(comment, Comment)]
