@@ -32,7 +32,7 @@ class RedditBot(Reddit, BotMixin):
                                         username=conf.REDDIT_USER,
                                         password=conf.REDDIT_PASS,
                                         user_agent=conf.REDDIT_AGENT)
-        self._subreddits = []
+        self._subreddits = None
         self.subreddit_list = subreddits
         youlog.log.info('Initializing Reddit Bot with subreddits: %s' % self.subreddit_list)
 
@@ -42,7 +42,10 @@ class RedditBot(Reddit, BotMixin):
 
     @subreddit_list.setter
     def subreddit_list(self, subreddits):
-        self._subreddits = self.resolve_subreddit_list(subreddits)
+        if subreddits is not None:
+            self._subreddits = self.resolve_subreddit_list(subreddits)
+        elif self._subreddits is None:
+            self._subreddits = conf.DEFAULT_SUBREDDITS
 
     @property
     def multireddit_str(self):
@@ -59,8 +62,8 @@ class RedditBot(Reddit, BotMixin):
         :return: iter(praw.models.reddit.submission.Submission), generator list of submissions
         """
         post_count = 0
-        self.store_blacklists()
         self.subreddit_list = subreddits
+        self.store_blacklists()
 
         try:
             youlog.log.info('Scanning multi-reddit: %s' % self.multireddit_str)
@@ -101,7 +104,10 @@ class RedditBot(Reddit, BotMixin):
             subreddit.save()
 
     def get_blacklists(self):
-        return [subreddit for subreddit in self.subreddit_list if not self.subreddit(subreddit).user_is_banned]
+        if self.subreddit_list:
+            return [subreddit for subreddit in self.subreddit_list if not self.subreddit(subreddit).user_is_banned]
+        else:
+            return []
 
     @staticmethod
     def post_has_youtube_link(post):
@@ -122,4 +128,4 @@ class RedditBot(Reddit, BotMixin):
         elif isinstance(subreddit_list, list):
             return subreddit_list
         else:
-            return subreddit_list or conf.DEFAULT_SUBREDDITS
+            return subreddit_list
