@@ -1,0 +1,30 @@
+version: 1
+disable_existing_loggers: True
+formatters:
+    simple:
+        format: "%(asctime)s [%(threadName)-12.12s][%(name)s] [%(levelname)-5.5s] - %(message)s"
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: simple
+        stream: ext://sys.stdout
+
+    info_file_handler:
+        class: logging.handlers.RotatingFileHandler
+        level: INFO
+        formatter: simple
+        maxBytes: 10485760 # 10MB
+        backupCount: 20
+        encoding: utf8
+
+loggers:
+    youcomment:
+        level: INFO
+        handlers: [info_file_handler]
+        propagate: yes
+
+root:
+    level: INFO
+    handlers: [console]

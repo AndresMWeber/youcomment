@@ -1,16 +1,15 @@
+import time
 from praw import Reddit
 from praw.models import Comment
 from praw.exceptions import APIException
 from prawcore.exceptions import OAuthException
-import time
-import peewee
 
-from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 import youcomment.youtube as yt
 import youcomment.conf as conf
 import youcomment.youlog as youlog
+from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 from youcomment.database import RedditPost, Subreddit
-
+from youcomment.errors import InvalidYoutubeURL
 
 class RedditBot(Reddit, BotMixin):
     REDDIT_MAX_POSTS = conf.REDDIT_MAX_POSTS
@@ -54,9 +53,9 @@ class RedditBot(Reddit, BotMixin):
     def stream(self):
         return self.subreddit(self.multireddit_str).stream.submissions(pause_after=2)
 
-    def run(self, subreddits=None):
+    def get_posts(self, subreddits=None):
         """ Obtains up to self.REDDIT_MAX_POSTS number of posts from the subreddit_list stream.
-            Set self.REDDIT_MAX_POSTS to 0 to run indefinitely.  Always detects bans at the start of the run.
+            Set self.REDDIT_MAX_POSTS to 0 to get_top_comments_from_url indefinitely.  Always detects bans at the start of the get_top_comments_from_url.
 
         :param subreddit_list: list or str, list of subreddit names or just a name
         :return: iter(praw.models.reddit.submission.Submission), generator list of submissions
@@ -89,13 +88,9 @@ class RedditBot(Reddit, BotMixin):
         :param post: praw.models.Submission, Reddit Post to store in the DB.
         :return: bool, True if new entry was created, False if already exists in the DB.
         """
-        try:
-            RedditPost.get(RedditPost.post_id == post.id)
-            return False
-        except peewee.DoesNotExist:
-            subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
-            RedditPost.create(post_id=post.id, subreddit=subreddit)
-            return True
+        subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
+        _, created = RedditPost.get_or_create(post_id=post.id, subreddit=subreddit, permalink=post.permalink)
+        return created
 
     def store_blacklists(self):
         for subreddit in self.get_blacklists():
@@ -109,17 +104,38 @@ class RedditBot(Reddit, BotMixin):
         else:
             return []
 
-    @staticmethod
-    def post_has_youtube_link(post):
-        try:
-            return bool(yt.YoutubeVideoBot.parse_url(post.url))
-        except IOError:
-            return False
+    def comment_reply(self, comment_id, body):
+        reply = None
+        try_again = True
+        retries = 0
+
+        comment = self.comment(comment_id)
+        youlog.log.info('Found comment from id %s...attempting to reply...' % comment.id)
+
+        while try_again:
+            try:
+                reply = comment.reply(body)
+                youlog.log.info('Reply successful: %s' % reply)
+
+            except APIException:
+                youlog.log.warning('Bot reply failed...retrying %d times...' % self.REDDIT_NUM_RETRIES)
+                retries += 1
+                time.sleep(self.REDDIT_REPLY_INTERVAL)
+                try_again = True if retries < self.REDDIT_NUM_RETRIES else False
+
+        return reply or {}
 
     def get_top_comments(self, post):
         comments = [comment for comment in post.comments if isinstance(comment, Comment)]
         comments.sort(key=lambda comment: comment.score, reverse=True)
         return comments[:self.REDDIT_COMMENTS_MAX_NUM]
+
+    @staticmethod
+    def post_has_youtube_link(post):
+        try:
+            return bool(yt.YoutubeVideoBot.get_video_id_from_url(post.url))
+        except InvalidYoutubeURL:
+            return False
 
     @staticmethod
     def resolve_subreddit_list(subreddit_list):

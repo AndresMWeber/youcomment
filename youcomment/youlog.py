@@ -1,18 +1,16 @@
-import logging
-from six import iteritems
-from youcomment.conf import __here__, LOG_PATH
+import yaml
+import os
+import logging.config
+from youcomment.conf import LOG_CONFIG_PATH, LOG_PATH
 
-for name, logger in iteritems(logging.root.manager.loggerDict):
-    logger.disabled = True
+if os.path.exists(LOG_CONFIG_PATH):
+    with open(LOG_CONFIG_PATH, 'rt') as f:
+        DICT_CONFIG = yaml.safe_load(f.read())
 
-log = logging.getLogger(__here__)
-logging.basicConfig(level=logging.INFO)
-logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s][%(name)s] [%(levelname)-5.5s] - %(message)s")
+    DICT_CONFIG['handlers']['info_file_handler']['filename'] = LOG_PATH
 
-fileHandler = logging.FileHandler(LOG_PATH)
-fileHandler.setFormatter(logFormatter)
-log.addHandler(fileHandler)
+    logging.config.dictConfig(DICT_CONFIG)
+else:
+    logging.basicConfig(level=logging.INFO)
 
-# consoleHandler = logging.StreamHandler()
-# consoleHandler.setFormatter(logFormatter)
-# log.addHandler(consoleHandler)
+log = logging.getLogger('youcomment')

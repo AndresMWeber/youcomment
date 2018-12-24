@@ -8,7 +8,7 @@ class TestRun(BaseTest):
     def test_default_run_valid(self):
         bot = RedditBot()
         bot.CHECKED_POSTS = []
-        self.assertTrue(bot.run())
+        self.assertTrue(bot.get_posts())
 
     def test_env_var_checking(self):
         for key in list(RedditBot.ENV_VAR_DEPENDENCIES):

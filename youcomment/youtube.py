@@ -1,9 +1,13 @@
 import re
+from logging import getLogger, ERROR
 from googleapiclient.discovery import build
-from youcomment.database import YoutubeVideo
+
 import youcomment.conf as conf
+from youcomment.database import YoutubeVideo
+from youcomment.errors import InvalidYoutubeURL
 from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 
+getLogger('googleapiclient.discovery').setLevel(ERROR)
 YOUTUBE_SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
@@ -45,9 +49,9 @@ class YoutubeVideoBot(BotMixin):
     def login(self, *args, **kwargs):
         self.client = build(*args, **kwargs)
 
-    def run(self, url=None):
+    def get_top_comments_from_url(self, url=None):
         self.url = url or self.url
-        video_id = self.parse_url(self.url)
+        video_id = self.get_video_id_from_url(self.url)
         top_comments = self.get_top_comments(videoId=video_id)
         YoutubeVideo.get_or_create(video_id=video_id, video_url=self.url)
         return top_comments
@@ -95,8 +99,8 @@ class YoutubeVideoBot(BotMixin):
         return YOUTUBE_URL_TEMPLATE.format(URL=video_id, COMMENT=comment_id)
 
     @staticmethod
-    def parse_url(url):
+    def get_video_id_from_url(url):
         try:
             return re.search(YOUTUBE_URL_VID_ID_REGEX, url).group(ID)
         except AttributeError:
-            raise IOError('Invalid Youtube link format inputted: %s' % url)
+            raise InvalidYoutubeURL('The given URL was not a Youtube URL: %s' % url)

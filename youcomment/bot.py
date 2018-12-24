@@ -4,6 +4,7 @@ import youcomment.youlog as youlog
 import youcomment.reddit as rd
 import youcomment.youtube as yt
 import youcomment.conf as conf
+from youcomment.errors import InvalidYoutubeURL
 from youcomment.youtube import VIDEO_ID, TEXT, ID
 from youcomment.version import __version__
 from youcomment.database import (CrossCommentRelationship,
@@ -16,7 +17,7 @@ from youcomment.database import (CrossCommentRelationship,
 
 class YouCompareBot(object):
     with open(conf.TEMPLATE_PATH, 'r') as f:
-        reply_template = f.read()
+        REPLY_TEMPLATE = f.read()
     MODE = conf.LIVE_MODE if conf.YC_LIVE_MODE else conf.DEV_MODE
     SIMILARITY_LIMIT = conf.SIMILARITY_LIMIT
 
@@ -35,20 +36,21 @@ class YouCompareBot(object):
         :param subreddits: list or str, list of subreddit names or just a name
         :return: list(tuple(float, praw.models.reddit.comment.Comment, dict)), list of (similarity, youtube video data, reddit comment)
         """
-        youlog.log.info('Initializing run of %s.' % self)
+        youlog.log.info('Initializing get_top_comments_from_url of %s.' % self)
         similar_posts = []
 
-        for post in self.reddit_bot.run(subreddits or self.reddit_bot.subreddit_list):
+        for post in self.reddit_bot.get_posts(subreddits or self.reddit_bot.subreddit_list):
             try:
-                youtube_comments = self.youtube_bot.run(post.url)
+                youtube_comments = self.youtube_bot.get_top_comments_from_url(post.url)
                 reddit_comments = self.reddit_bot.get_top_comments(post)
+
                 for reddit_comment in reddit_comments:
                     for youtube_comment in youtube_comments:
                         similarity = self.similarity(youtube_comment[TEXT], reddit_comment.body)
                         if similarity > self.SIMILARITY_LIMIT:
                             self.make_relationship(youtube_comment, reddit_comment, similarity)
                             break
-            except IOError:
+            except InvalidYoutubeURL:
                 youlog.log.warning('Post %s was not detected to have a YouTube Link...skipping' % post.id)
 
         self.make_replies()
@@ -63,15 +65,16 @@ class YouCompareBot(object):
 
         y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment[VIDEO_ID])
         y_comment_id = youtube_comment[ID]
+        y_db_comment, _ = YoutubeComment.get_or_create(comment_id=y_comment_id,
+                                                       video=y_video,
+                                                       permalink=yt.YoutubeVideoBot.build_url(y_video.video_id,
+                                                                                              y_comment_id))
 
-        y_comment = YoutubeComment.create(comment_id=y_comment_id,
-                                          video=y_video,
-                                          permalink=yt.YoutubeVideoBot.build_url(y_video.video_id, y_comment_id))
+        cc_relationship, _ = CrossCommentRelationship.get_or_create(reddit_comment=r_db_comment,
+                                                                    youtube_comment=y_db_comment,
+                                                                    similarity=similarity)
 
         has_replied = any([reply for reply in reddit_comment.replies if reply.author.name == self.reddit_bot.user.me()])
-        cc_relationship, _ = CrossCommentRelationship.get_or_create(reddit_comment=r_db_comment,
-                                                                    youtube_comment=y_comment,
-                                                                    similarity=similarity)
         cc_relationship.replied = has_replied
         cc_relationship.save()
 
@@ -87,10 +90,10 @@ class YouCompareBot(object):
                                                                                       youtube_db_entry.permalink))
 
             if self.MODE == conf.LIVE_MODE:
-                reply_body = self.reply_template.format(SIM=round(100 * cross_comment.similarity, 3),
+                reply_body = self.REPLY_TEMPLATE.format(SIM=round(100 * cross_comment.similarity, 3),
                                                         URL=youtube_db_entry.permalink,
                                                         V=__version__)
-                self.reddit_bot.bot_reply(reddit_db_entry.comment_id, reply_body)
+                self.reddit_bot.comment_reply(reddit_db_entry.comment_id, reply_body)
                 cross_comment.replied = True
                 cross_comment.save()
                 youlog.log.info('Successfully made reply.')

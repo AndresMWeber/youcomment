@@ -5,7 +5,7 @@ import youcomment.youtube as yt
 from youcomment.errors import EnvironmentError
 from googleapiclient.errors import HttpError
 
-parse = yt.YoutubeVideoBot.parse_url
+parse = yt.YoutubeVideoBot.get_video_id_from_url
 
 
 class TestRun(TestCase):
@@ -14,7 +14,7 @@ class TestRun(TestCase):
         while error and not retry_count >= num_retries:
             try:
                 with warnings.catch_warnings():
-                    self.assertIsNotNone(yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').run())
+                    self.assertIsNotNone(yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').get_top_comments_from_url())
                 error = False
 
             except HttpError:

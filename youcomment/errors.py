@@ -6,3 +6,8 @@ class EnvironmentError(Exception):
 class ConfigError(Exception):
     """ Is raised when a config variable was not found. """
     pass
+
+
+class InvalidYoutubeURL(Exception):
+    """ Is raised when a url is not a valid youtube link. """
+    pass
