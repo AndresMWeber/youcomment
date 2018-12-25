@@ -47,7 +47,8 @@ setup(
                       'google-auth',
                       'google-auth-oauthlib',
                       'google-auth-httplib2',
-                      'peewee'],
+                      'peewee',
+                      'pyyaml'],
     extras_require={
         'test': ['nose', 'coverage'],
         'dev': ['nose', 'coverage']
