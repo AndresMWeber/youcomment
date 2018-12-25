@@ -8,6 +8,13 @@ from functools import wraps
 class BotMixin(object):
     ENV_VAR_DEPENDENCIES = {}
 
+    @staticmethod
+    def build_comment_url(*args):
+        raise NotImplementedError
+
+    def get_top_comments(self, *args, **kwargs):
+        pass
+
 
 def ensure_instance_env_var_dependencies(fn):
     @wraps(fn)

@@ -5,7 +5,7 @@ import youcomment.youtube as yt
 from youcomment.errors import EnvironmentError
 from googleapiclient.errors import HttpError
 
-parse = yt.YoutubeVideoBot.get_video_id_from_url
+parse = yt.YoutubeBot.get_video_id_from_url
 
 
 class TestRun(TestCase):
@@ -14,18 +14,18 @@ class TestRun(TestCase):
         while error and not retry_count >= num_retries:
             try:
                 with warnings.catch_warnings():
-                    self.assertIsNotNone(yt.YoutubeVideoBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').get_top_comments_from_url())
+                    self.assertIsNotNone(yt.YoutubeBot('https://www.youtube.com/watch?v=Es44QTJmuZ0').get_top_comments_from_url())
                 error = False
 
             except HttpError:
                 retry_count += 1
 
     def test_env_var_checking(self):
-        for key in list(yt.YoutubeVideoBot.ENV_VAR_DEPENDENCIES):
+        for key in list(yt.YoutubeBot.ENV_VAR_DEPENDENCIES):
             reddit_pass = os.getenv(key)
             os.environ[key] = ''
             with self.assertRaises(EnvironmentError):
-                yt.YoutubeVideoBot()
+                yt.YoutubeBot()
             os.environ[key] = reddit_pass
 
 

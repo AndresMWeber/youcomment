@@ -11,6 +11,7 @@ from youcomment.mixins import BotMixin, ensure_instance_env_var_dependencies
 from youcomment.database import RedditPost, Subreddit
 from youcomment.errors import InvalidYoutubeURL
 
+
 class RedditBot(Reddit, BotMixin):
     REDDIT_MAX_POSTS = conf.REDDIT_MAX_POSTS
     ENV_VAR_DEPENDENCIES = {'YC_REDDIT_PASS': conf.REDDIT_PASS,
@@ -89,7 +90,7 @@ class RedditBot(Reddit, BotMixin):
         :return: bool, True if new entry was created, False if already exists in the DB.
         """
         subreddit, _ = Subreddit.get_or_create(name=post.subreddit.display_name)
-        _, created = RedditPost.get_or_create(post_id=post.id, subreddit=subreddit, permalink=post.permalink)
+        _, created = RedditPost.get_or_create(post_id=post.id, subreddit_id=subreddit, permalink=post.permalink)
         return created
 
     def store_blacklists(self):
@@ -131,9 +132,13 @@ class RedditBot(Reddit, BotMixin):
         return comments[:self.REDDIT_COMMENTS_MAX_NUM]
 
     @staticmethod
+    def build_comment_url(reddit_comment):
+        return 'http://reddit.com/' + reddit_comment.permalink
+
+    @staticmethod
     def post_has_youtube_link(post):
         try:
-            return bool(yt.YoutubeVideoBot.get_video_id_from_url(post.url))
+            return bool(yt.YoutubeBot.get_video_id_from_url(post.url))
         except InvalidYoutubeURL:
             return False
 

@@ -33,12 +33,12 @@ YOUTUBE_KWARGS = {'maxResults': conf.YOUTUBE_COMMENTS_PER_PAGE,
                   'part': POST_PART_QUERY}
 
 
-class YoutubeVideoBot(BotMixin):
+class YoutubeBot(BotMixin):
     ENV_VAR_DEPENDENCIES = {'YC_YOUTUBE_API_KEY': conf.YOUTUBE_API_KEY}
 
     @ensure_instance_env_var_dependencies
     def __init__(self, video_url=None, cache_discovery=False):
-        super(YoutubeVideoBot, self).__init__()
+        super(YoutubeBot, self).__init__()
         self.client = None
         self.url = video_url
         self.login(YOUTUBE_API_SERVICE_NAME,
@@ -88,14 +88,14 @@ class YoutubeVideoBot(BotMixin):
             comment_likes = comment[LIKE_COUNT]
 
             if comment_likes >= conf.YOUTUBE_LIKE_THRESHOLD:
-                comment[URL] = self.build_url(kwargs.get(VIDEO_ID), comment_id)
+                comment[URL] = self.build_comment_url(kwargs.get(VIDEO_ID), comment_id)
                 top_n_comments.append(comment)
 
         top_n_comments.sort(key=lambda d: d[LIKE_COUNT], reverse=True)
         return top_n_comments[:conf.YOUTUBE_NUM_TOP_COMMENTS]
 
     @staticmethod
-    def build_url(video_id, comment_id):
+    def build_comment_url(video_id, comment_id):
         return YOUTUBE_URL_TEMPLATE.format(URL=video_id, COMMENT=comment_id)
 
     @staticmethod

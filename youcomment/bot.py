@@ -24,7 +24,7 @@ class YouCompareBot(object):
     def __init__(self, subreddits=None):
         init_db()
         self.reddit_bot = rd.RedditBot()
-        self.youtube_bot = yt.YoutubeVideoBot()
+        self.youtube_bot = yt.YoutubeBot()
         self.reddit_bot.subreddit_list = subreddits or self.reddit_bot.subreddit_list
 
     def run(self, subreddits=None):
@@ -60,18 +60,18 @@ class YouCompareBot(object):
     def make_relationship(self, youtube_comment, reddit_comment, similarity):
         reddit_post = RedditPost.get(RedditPost.post_id == reddit_comment.submission.id)
         r_db_comment, _ = RedditComment.get_or_create(comment_id=reddit_comment.id,
-                                                      permalink='http://reddit.com' + reddit_comment.permalink,
-                                                      post=reddit_post)
+                                                      permalink=rd.RedditBot.build_comment_url(reddit_comment),
+                                                      post_id=reddit_post)
 
         y_video = YoutubeVideo.get(YoutubeVideo.video_id == youtube_comment[VIDEO_ID])
         y_comment_id = youtube_comment[ID]
         y_db_comment, _ = YoutubeComment.get_or_create(comment_id=y_comment_id,
-                                                       video=y_video,
-                                                       permalink=yt.YoutubeVideoBot.build_url(y_video.video_id,
-                                                                                              y_comment_id))
+                                                       video_id=y_video,
+                                                       permalink=yt.YoutubeBot.build_comment_url(y_video.video_id,
+                                                                                                 y_comment_id))
 
-        cc_relationship, _ = CrossCommentRelationship.get_or_create(reddit_comment=r_db_comment,
-                                                                    youtube_comment=y_db_comment,
+        cc_relationship, _ = CrossCommentRelationship.get_or_create(reddit_comment_id=r_db_comment,
+                                                                    youtube_comment_id=y_db_comment,
                                                                     similarity=similarity)
 
         has_replied = any([reply for reply in reddit_comment.replies if reply.author.name == self.reddit_bot.user.me()])
@@ -84,10 +84,9 @@ class YouCompareBot(object):
         youlog.log.info('Bot status: %s, %s making replies.' % (self.MODE, 'not' if self.MODE == conf.DEV_MODE else ''))
 
         for cross_comment in CrossCommentRelationship.select().where(CrossCommentRelationship.replied == False):
-            reddit_db_entry = cross_comment.reddit_comment
-            youtube_db_entry = cross_comment.youtube_comment
-            youlog.log.info('Replying to comment %s because of youtube comment %s' % (reddit_db_entry.permalink,
-                                                                                      youtube_db_entry.permalink))
+            reddit_db_entry = cross_comment.reddit_comment_id
+            youtube_db_entry = cross_comment.youtube_comment_id
+            youlog.log.info('Using cross comment relationship: %r' % cross_comment)
 
             if self.MODE == conf.LIVE_MODE:
                 reply_body = self.REPLY_TEMPLATE.format(SIM=round(100 * cross_comment.similarity, 3),

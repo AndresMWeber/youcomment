@@ -37,7 +37,7 @@ class Subreddit(peewee.Model):
 
 class RedditPost(peewee.Model):
     post_id = peewee.CharField(max_length=100, unique=True)
-    subreddit = peewee.ForeignKeyField(Subreddit, backref='subreddit')
+    subreddit_id = peewee.ForeignKeyField(Subreddit, backref='posts')
     permalink = peewee.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -46,8 +46,7 @@ class RedditPost(peewee.Model):
 
 class RedditComment(peewee.Model):
     comment_id = peewee.CharField(max_length=100, unique=True)
-    post = peewee.ForeignKeyField(RedditPost, backref='post')
-    replied = peewee.BooleanField(default=False)
+    post_id = peewee.ForeignKeyField(RedditPost, backref='comments')
     permalink = peewee.CharField(max_length=255, unique=True)
 
     class Meta:
@@ -64,16 +63,16 @@ class YoutubeVideo(peewee.Model):
 
 class YoutubeComment(peewee.Model):
     comment_id = peewee.CharField(max_length=255, unique=True)
+    video_id = peewee.ForeignKeyField(YoutubeVideo, backref='video')
     permalink = peewee.CharField(max_length=255, unique=True)
-    video = peewee.ForeignKeyField(YoutubeVideo, backref='video')
 
     class Meta:
         database = db
 
 
 class CrossCommentRelationship(peewee.Model):
-    reddit_comment = peewee.ForeignKeyField(RedditComment, backref='reddit_comment')
-    youtube_comment = peewee.ForeignKeyField(YoutubeComment, backref='youtube_comment')
+    reddit_comment_id = peewee.ForeignKeyField(RedditComment, backref='related_to')
+    youtube_comment_id = peewee.ForeignKeyField(YoutubeComment, backref='related_to')
     similarity = peewee.FloatField(default=0.0)
     replied = peewee.BooleanField(default=False)
 
@@ -82,8 +81,8 @@ class CrossCommentRelationship(peewee.Model):
 
     def __repr__(self):
         return str(u'{}(reddit: {}, youtube: {}, similarity: {}, replied: {}'.format(self.__class__.__name__,
-                                                                                     self.reddit_comment.comment_id,
-                                                                                     self.youtube_comment.comment_id,
+                                                                                     self.reddit_comment_id.permalink,
+                                                                                     self.youtube_comment_id.permalink,
                                                                                      self.similarity,
                                                                                      self.replied).encode('utf-8'))
 
