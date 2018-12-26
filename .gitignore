@@ -117,3 +117,4 @@ dmypy.json
 !/.coveragerc
 .idea/
 *.db
+*.xml
