@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Added .xml to gitignore
+* Refactored to use pbr. Added [nosetests] to setup.py Removed CHANGELOG.md Removed LICENSE.md Streamlined requirements.txt Streamlined setup.py
 * Renamed ForeignKeyFields to append '\_id' as per issue: https://github.com/coleifer/peewee/issues/44 Renamed YoutubeVideoBot to YoutubeBot Added two placeholder methods to BotMixin. Added build\_comment\_url to both youtube and reddit bots to abstract
 * Forgot to add pyyaml to the setup.py
 * Version 0.6.3 Changed logging completely to use dictConfig and a rotating file handler. Refactored the names of a few methods on the bots to be more succinct. Added errors.InvalidYoutubeURL to have a specific error. Added a yaml log config file. Removed runtime.txt since Heroku will deploy based on last python version used
