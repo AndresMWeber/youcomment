@@ -20,6 +20,7 @@ class RedditBot(Reddit, BotMixin):
     REDDIT_REPLY_INTERVAL = conf.REDDIT_REPLY_INTERVAL
     REDDIT_NUM_RETRIES = conf.REDDIT_NUM_RETRIES
     REDDIT_COMMENTS_MAX_NUM = conf.REDDIT_COMMENTS_MAX_NUM
+    REDDIT_URL = 'http://reddit.com/'
 
     @ensure_instance_env_var_dependencies
     def __init__(self, subreddits=None):
@@ -131,9 +132,9 @@ class RedditBot(Reddit, BotMixin):
         comments.sort(key=lambda comment: comment.score, reverse=True)
         return comments[:self.REDDIT_COMMENTS_MAX_NUM]
 
-    @staticmethod
-    def build_comment_url(reddit_comment):
-        return 'http://reddit.com/' + reddit_comment.permalink
+    @classmethod
+    def build_comment_url(cls, reddit_comment):
+        return cls.REDDIT_URL + reddit_comment.permalink
 
     @staticmethod
     def post_has_youtube_link(post):

@@ -27,7 +27,6 @@ default-run: &test-template
             . venv/bin/activate
             pip install --upgrade pip
             pip install -e .[dev]
-            pip install nose coverage
             mkdir -p ./test-results/python
             mkdir coverage-files
       - save_cache:
@@ -38,7 +37,7 @@ default-run: &test-template
           name: Run tests
           command: |
             . venv/bin/activate
-            nosetests --with-coverage --cover-package=youcomment --with-xunit --xunit-file ./test-results/python/test-results.xml
+            python setup.py nosetests --xunit-file ./test-results/python/test-results.xml
             mv .coverage ./coverage-files/.coverage.$PYTHON_VERSION
       - store_test_results: &store-results
           path: test-results

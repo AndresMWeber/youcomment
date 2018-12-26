@@ -1,0 +1,130 @@
+CHANGES
+=======
+
+* Renamed ForeignKeyFields to append '\_id' as per issue: https://github.com/coleifer/peewee/issues/44 Renamed YoutubeVideoBot to YoutubeBot Added two placeholder methods to BotMixin. Added build\_comment\_url to both youtube and reddit bots to abstract
+* Forgot to add pyyaml to the setup.py
+* Version 0.6.3 Changed logging completely to use dictConfig and a rotating file handler. Refactored the names of a few methods on the bots to be more succinct. Added errors.InvalidYoutubeURL to have a specific error. Added a yaml log config file. Removed runtime.txt since Heroku will deploy based on last python version used
+* Sorted for assertEqual test Amended main Bot run to use new RedditBot subreddit\_list property Fixed use cases for subreddit\_list input and fixed integration of input
+* Refactored RedditYoutubeBot to RedditBot for conciseness. Added a few methods to RedditBot that simplified and compartmentalized code a bit better leading to more legible methods
+* Disabled loggers BEFORE initializing my logger
+* Rounding just since it's not super important
+* Pre sorting results for test comparing
+* Trying to fix logging Fixed repr for CrossCommentRelationship
+* Trying to set logic to reset the "replied" status of any generated CrossCommentRelationship instead of using the stored replied value
+* Added repr to CrossCommentRelationship
+* Forgot to implement reply using RedditBot.bot\_reply
+* Missed one
+* Removed replied status checking since it's unnecessary
+* Quieting other loggers
+* Forgot I forced LIVE mode. Changed default reply interval after rejection to 10 minutes
+* Used the wrong reddit\_comment. Refactored r\_comment to r\_db\_comment to make more obvious
+* Added more reply logic/reporting. Encapsulate/Initialize comment before using the reply logic so we can test better
+* Accidentally placed logic in RedditBot.comment instead of reply
+* Forgot to return the generated comment
+* Added reply db logic and checking second level replies to targetted comments
+* versioned up to 0.6.2 fixed logging formatter issue
+* Added: @stream\_with\_context decorator to generate\_log. Removed: with app.app\_context as it was unnecessary, the undecorated generate\_log was causing the issue. According to: ~lib\site-packages\flask\helpers.py (generator func docstring)
+* Fixed: Percentage readout for similarity. Changed: Simplified responses html table with just comment\_ids and url hrefs instead of full urls. Added: app\_context to stream\_template just in case that helps with the template stream error that pops up on exit in Heroku. Changed: Pushed log file to data folder. Changed: Made maximum length for youtube video\_id and comment\_id 255 just in case since I was hitting the max length of 20. Changed: Added name to logging formatter
+* Fixed endpoint misdirection for log\_stream
+* fixed issue where there are no pragma keywords for PostgresqlDatabase
+* Added: gitignored entries for db helper files
+* Added: modified styling for the log page. Added: logstream and log endpoints now available with necessary logic to stream the log. Changed: Status now in default.html Added: All endpoints accessible from index
+* Added return for badge separation
+* Changed some string formatting to be simpler. Used youcomment.youtube definitions to reduce dictionary key duplicates. Removed resolve\_blacklists for now. Refactored all comment scraping functions to get\_top\_comments
+* Formatting fixes and simple simplifications to functions. Added DEV/LIVE mode definitions and moved log file declarations to conf. Removed STDOUT log stream. Added Configuration section to README
+* Refactored RedditYoutubeBot -> RedditBot Refactored post\_template.txt -> template.md to make use of Reddit's markdown style comments
+* Python2/3 solution for urllib
+* Followed Peewee->Flask->Heroku->PostgreSQL DB techniques outlined here: https://swifthorseman.com/2015/06/18/deploying-a-flask-app-with-peewee-to-heroku/
+* Ammending to all CrossCommentRelationships as that means we are going to reply
+* Just...too much css/html at this point. Adjusted second permalink database updating point
+* Played more with CSS/HTML. Used current praw.Reddit instance instead of trying to use the class method without instantiation
+* Adding a few CSS stylings Playing with HTML page formatting. Added scheduler state to status page. Printing comment ID...lazy
+* Fixing bug due to incorrect property reference
+* Fixing unicode issue according to: https://stackoverflow.com/questions/41542613/utf-8-string-in-python-2-and-3
+* Fixed html page to show valid information. Added permalinks to DB entries. Added a bunch more logging. Simulate run no matter live mode or not, but do not reply. Added YoutubeBot.build\_url to automate url building
+* Bugfix for attempt at quick fix through the browser for dynamic port resolving
+* Update app.py
+* Update requirements.txt
+* Added a listener to the scheduler to check for errors and log. Implemented interval style for scheduler and fixed interval time. Added logging to main bot.make\_replies Refactored out the scheduler creation in \_\_main\_\_ to allow the web server to access the scheduler creation. Moved bot creation into the init rather than class for YouCompareBot Added DEFAULT\_BOT\_RUN\_INTERVAL\_MINS to conf.py. Updated the Procfile to have the new web process. Added app.py (Flask Entrypoint) Added necessary html and css files for flask. Upversion for new web server feature!
+* I think worker is the correct dyno type.  Web is for a web server which we are not running
+* Added scheduler for continuous mode: 5 minute default. Also added escape key According to: https://stackoverflow.com/questions/11523918/python-start-a-function-at-given-time
+* Version 0.5.0 Added logging with both STDOUT and a log file to its own module Added a placeholder CLI flag for specifying run intervals on continuous runs. Automated building the REDDIT\_AGENT. Added a Try/Except for the main reddit stream check in case the user entered invalid credentials
+* Refactored entrypoint, removed cli.py and added \_\_main\_\_.py instead. Upversioned to 0.4.2 for heroku bugfix Removed unnecessary \_\_main\_\_ run from bot.py Adjusted Procfile accordingly
+* Removed extra worker definition which was causing Heroku to get confused
+* ResourceWarning does not exist in python 2.7
+
+0.4.1
+-----
+
+* Added db to gitignore as we recreate on demand
+* Upversion
+* Added warning filter for SSL connection not being closed since it was annoying. Removed unecessary retries since I figured out what the error problem was. Added the test\_env\_var\_checking to the reddit/youtube test suites. Added a logger to conf. Added a wrapper to check for env vars/config vars instead of a mixin that relies on \_\_init\_\_ as it was causing problems. Added two errors types. Fixed the mixin file and added a wrapper function
+* Added a retry for running the bot since it randomly errors with a googleapiclient.errors.HttpError Specified old test subreddit since that has posts and I didn't want to reinvent the wheel. Specified new subreddit that is more sensibly named
+* Added heroku status badge
+* Updating Procfile for Heroku Monitoring
+* Adding newrelic
+* Accidentally didn't add untracked files for cli and procfile
+* Create runtime.txt
+* Added Procfile for Heroku deployment and marked in CHANGELOG
+* CLI entry point/argparser module. Added class properties to YouCompareBot to enable changing vars at runtime     -   YouCompareBot.post\_template\_file = conf.POST\_TEMPLATE     -   YouCompareBot.SIMILARITY\_LIMIT = conf.SIMILARITY\_LIMIT     -   YouCompareBot.REDDIT\_REPLY\_INTERVAL = conf.REDDIT\_REPLY\_INTERVAL     -   YouCompareBot.REDDIT\_NUM\_RETRIES = conf.REDDIT\_NUM\_RETRIES Removed unused RedditYoutubeBot.SUBMISSION\_TRACKER
+* Fixed youtube run test case
+* Fixed 4 minor codacy issues
+* Update setup.py
+* Update and rename history.md to CHANGELOG.md
+* Updated README.md
+* Adding TOC and Restructuring + License Link
+* Create LICENSE.md
+* Upversioned to 0.3.0 Removed unused imports. Corrected pulling of config YC\_LIVE\_MODE variable
+* Completely changed the way the codebase works by implementing a database using PeeWee
+* Added new runtime tests Moved txt files to a separate folder upversioned to 0.2.0 reworked functions to be streamlined reworked Bot.run commands to be generators so they can either work continuously or finitely. started to add a bunch of stuff to the README concerning usage. Reworked the config file and integrated all runtime-changable config vars to their necessary class properties. Added some docstrings
+* Needed to activate venv to run cli tools
+* wrong field for run step
+* totally missed the fact that I was trying to submit coverage xml files as test results. Fixed to use nose's junit style xml output as well as coverage file and split output to a new coverage dir
+* last test to see if this fixes it. otherwise I've done all I can
+* forgot to make store step relative
+* frustrating
+* seeing if making relative to . works differently
+* new root for persist step
+* Seeing if it's file relative paths that is the issue
+* Seeing if this works to rename the xml file itself. https://stackoverflow.com/questions/47236086/test-summary-not-populated-with-test-results-in-circleci
+* Upon further review I don't need artifacts and I believe this is how the example stores test results
+* Testing a little more straightforward workflow
+* Mistakenly did the coverage file and not the actual xml test results folder
+* Had to delete symlink after as it caused issues since multiple workspaces were persisting the same folder
+* Added symlink in config.yml since env var subsitution still is not supported in CircleCI 2.0 https://discuss.circleci.com/t/using-environment-variables-in-config-yml-not-working/14237/18
+* Removed unnecessary test \`ls\` command in CircleCI config. Added .coveragerc Ammended the .gitignore file with extras
+* Final tweaks I think for tonight.  Fixed spacing and extra return
+* Chasing markdown formatting style issues
+* Changed from bullets as what I really wanted were tables
+* Markup Fixes...probably going to turn this off from Codacy in the future...pretty annoying
+* Adding pip upgrade just in case somehow that causes issues down the line
+* forgot to add coverage pip install
+* colon syntax mistake
+* mis tab
+* forgot requires
+* Adding in coverage combining
+* attempting something seen here: https://discuss.circleci.com/t/error-locating-workspace-root-directory-stat/13709/6
+* seems to exist...might be an issue with persist\_to\_workspace
+* basically doing ssh work via pushes...checking to see what files exist in the folders
+* testing out using . as the root
+* not sure if persist\_to\_workspace works with env vars
+* still not sure what works for persist\_to\_workspace. tried to specify just filename
+* specifying filename to see if thats the issue for persist\_to\_workspace
+* attempting ls since SSH handling in CircleCI isn't working
+* attempting to rely on the circleci working-directory made all paths relative
+* switched to debian friendly mv instead of rename
+* syntax error at (eval 1) line 1, near "." I think this is what rename was complaining about
+* Used wrong syntax for getting env vars
+* - Removed xml conversion in each job - used coverage combine and coverage xml instead in the coverage reporting section - Added environment variables for python version
+* Addressed 62 total issues from Codacy
+* removing coverage for now
+* added coverage conversion to xml
+* fixing coverage step
+* have a good feeling that I set up the upload-coverage correctly this time
+* more fudging around with circle config. seeing if putting upload-coverage as a job quells the beast
+* wrong path variable for test-results storing
+* wrong key name
+* Switched to nosetests for test runner. Tried to add code coverage reporting. Added a badge for codacy
+* Fixed python2.7 package import issues
+* accidental double definition in circleci of test-template
+* Initial commit.  Needs tons of checks and a db
