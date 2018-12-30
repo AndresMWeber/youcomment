@@ -6,7 +6,6 @@ import youcomment.youtube as yt
 import youcomment.conf as conf
 from youcomment.errors import InvalidYoutubeURL
 from youcomment.youtube import VIDEO_ID, TEXT, ID
-from youcomment.version import __version__
 from youcomment.database import (CrossCommentRelationship,
                                  YoutubeComment,
                                  RedditPost,
@@ -91,7 +90,7 @@ class YouCompareBot(object):
             if self.MODE == conf.LIVE_MODE:
                 reply_body = self.REPLY_TEMPLATE.format(SIM=round(100 * cross_comment.similarity, 3),
                                                         URL=youtube_db_entry.permalink,
-                                                        V=__version__)
+                                                        V=conf.VERSION)
                 self.reddit_bot.comment_reply(reddit_db_entry.comment_id, reply_body)
                 cross_comment.replied = True
                 cross_comment.save()
