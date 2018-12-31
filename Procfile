@@ -1,1 +1,2 @@
-web: newrelic-admin run-program run.sh
+release: pip install -e .
+web: newrelic-admin run-program python -m youcomment.app
