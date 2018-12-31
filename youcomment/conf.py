@@ -1,8 +1,16 @@
-from os import getenv, path
+from os import getenv, path, environ
 from pbr.version import VersionInfo
 import platform
 
 PROJECT_NAME = 'youcomment'
+MANUAL_VERSION = '0.6.6'
+
+try:
+    info = VersionInfo(PROJECT_NAME)
+except Exception:
+    environ['PBR_VERSION'] = MANUAL_VERSION
+    info = VersionInfo(PROJECT_NAME)
+
 VERSION = VersionInfo(PROJECT_NAME).version_string()
 VERSION_VCS = VersionInfo(PROJECT_NAME).version_string_with_vcs()
 PLATFORM = platform.system()

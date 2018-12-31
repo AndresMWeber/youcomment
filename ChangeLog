@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* Changed to have pbr auto generated version from git tag in conf
+* Removed version.py
 * Added .xml to gitignore
 * Refactored to use pbr. Added [nosetests] to setup.py Removed CHANGELOG.md Removed LICENSE.md Streamlined requirements.txt Streamlined setup.py
 * Renamed ForeignKeyFields to append '\_id' as per issue: https://github.com/coleifer/peewee/issues/44 Renamed YoutubeVideoBot to YoutubeBot Added two placeholder methods to BotMixin. Added build\_comment\_url to both youtube and reddit bots to abstract
