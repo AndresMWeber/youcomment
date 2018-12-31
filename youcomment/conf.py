@@ -11,8 +11,8 @@ except Exception:
     environ['PBR_VERSION'] = MANUAL_VERSION
     info = VersionInfo(PROJECT_NAME)
 
-VERSION = VersionInfo(PROJECT_NAME).version_string()
-VERSION_VCS = VersionInfo(PROJECT_NAME).version_string_with_vcs()
+VERSION = info.version_string()
+VERSION_VCS = info.version_string_with_vcs()
 PLATFORM = platform.system()
 
 # Modifiable Settings
