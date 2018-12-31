@@ -1,1 +1,1 @@
-web: newrelic-admin run-program python -m youcomment.app
+web: newrelic-admin run-program run.sh
