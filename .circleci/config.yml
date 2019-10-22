@@ -5,12 +5,10 @@ workflows:
     jobs:
       - test-3.6
       - test-3.5
-      - test-2.7
       - upload-coverage:
           requires:
             - test-3.6
             - test-3.5
-            - test-2.7
 
 default-run: &test-template
     working_directory: ~/commentcomparebot
@@ -59,13 +57,6 @@ jobs:
       PYTHON_VERSION: python35
     docker:
       - image: circleci/python:3.5
-
-  test-2.7:
-    <<: *test-template
-    environment:
-      PYTHON_VERSION: python27
-    docker:
-      - image: circleci/python:2.7
 
   upload-coverage: 
     docker:
