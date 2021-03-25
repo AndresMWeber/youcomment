@@ -10,7 +10,7 @@ peewee==3.7.1
 praw==6.0.0
 pbr==5.1.1
 psycopg2==2.7.6.1
-PyYAML==4.2b4
+PyYAML==5.4
 six==1.11.0
 urllib3==1.25.6
 newrelic
